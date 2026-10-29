@@ -195,10 +195,6 @@
     out.generator = "Fly Frame 360° v" + FFV.version;
     add(D + "tour.json", enc.encode(JSON.stringify(out, null, 1)));
     add("LASIMANI.txt", enc.encode(readme(PAGE.endsWith(".html") ? PAGE : "tour360.html")));
-    // client installation guides, if they sit next to the tour page
-    for (const g of ["FlyFrame-360-uzstadisana-LV.pdf", "FlyFrame-360-ustanovka-RU.pdf"]) {
-      try { add(g, await bytesOf(new URL(g, location.href).href, true)); } catch (e) {}
-    }
     const name = (slug(api.T(cfg.title)) || "tour") + ".zip";
     download(name, zip(list));
     status(problems.length ? `Архив ${name} скачан, но не найдены файлы: ${problems.join(", ")}` : `Архив ${name} скачан: ${list.length} файлов`);
