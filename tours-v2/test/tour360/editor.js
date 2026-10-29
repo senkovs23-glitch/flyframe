@@ -195,6 +195,10 @@
     out.generator = "Fly Frame 360° v" + FFV.version;
     add(D + "tour.json", enc.encode(JSON.stringify(out, null, 1)));
     add("LASIMANI.txt", enc.encode(readme(PAGE.endsWith(".html") ? PAGE : "tour360.html")));
+    // client installation guides, if they sit next to the tour page
+    for (const g of ["FlyFrame-360-uzstadisana-LV.pdf", "FlyFrame-360-ustanovka-RU.pdf"]) {
+      try { add(g, await bytesOf(new URL(g, location.href).href, true)); } catch (e) {}
+    }
     const name = (slug(api.T(cfg.title)) || "tour") + ".zip";
     download(name, zip(list));
     status(problems.length ? `Архив ${name} скачан, но не найдены файлы: ${problems.join(", ")}` : `Архив ${name} скачан: ${list.length} файлов`);
@@ -208,7 +212,7 @@
       `LV: Augšupielādējiet ${page} un mapi tour360/ vienā mapē savā vietnē (piemēram, /360/) un ievietojiet lapā:`,
       `RU: Загрузите ${page} и папку tour360/ в одну папку на сайте (например, /360/) и вставьте на страницу:`,
       "",
-      `<iframe src="https://JŪSU-VIETNE.lv/360/${page}" allow="fullscreen; gyroscope; accelerometer" style="width:100%;aspect-ratio:16/9;border:0"></iframe>`,
+      `<iframe src="https://JUSU-VIETNE.lv/360/${page}" allow="fullscreen; gyroscope; accelerometer" loading="lazy" style="width:100%;height:75vh;min-height:420px;border:0"></iframe>`,
       "",
       `LV: Failu ${page} drīkst pārdēvēt; mapes nosaukumu tour360 — nē.`,
       `RU: Файл ${page} можно переименовать; папку tour360 — нельзя.`,
