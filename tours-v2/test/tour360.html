@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="lv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>360°</title>
+<link rel="stylesheet" href="tour360/viewer.css">
+</head>
+<body>
+<div id="app">
+  <canvas id="gl" aria-label="360°"></canvas>
+  <div id="spots"></div>
+
+  <header id="top"><nav id="strip" aria-label="Scenes"></nav></header>
+
+  <aside id="map" hidden>
+    <div class="mhead"><div id="planTabs" role="tablist"></div><button class="ib" id="mapBig" aria-pressed="false"><svg class="ico" viewBox="0 0 24 24"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></button></div>
+    <div class="mbox" id="mbox">
+      <img id="mapImg" alt="">
+      <svg id="cone" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+      <span class="north" id="north">N ↑</span>
+    </div>
+  </aside>
+
+  <div id="sceneTag" aria-hidden="true"></div>
+
+  <footer id="band">
+    <div class="bl">
+      <a class="brand" id="brand" target="_blank" rel="noopener"></a>
+      <span class="bsep" id="bsep"></span>
+      <div class="titles" id="titles">
+        <h1 id="title"><span id="titleT"></span><span class="badge" id="badge" hidden></span></h1>
+        <div id="scene"></div>
+      </div>
+    </div>
+    <div class="bc" id="controls">
+      <button class="ib zoom" id="zOut"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M8 11h6M16.5 16.5 21 21"/></svg></button>
+      <button class="ib zoom" id="zIn"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M8 11h6M11 8v6M16.5 16.5 21 21"/></svg></button>
+      <span class="bdiv zoom"></span>
+      <button class="ib" id="rot" aria-pressed="true"><svg class="ico" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4h-4"/></svg></button>
+      <button class="ib" id="thumbsBtn" aria-pressed="true"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="5" rx="1"/><rect x="14" y="4" width="7" height="5" rx="1"/><path d="M3 14h18M3 19h12"/></svg></button>
+      <button class="ib" id="mapBtn" aria-pressed="false"><svg class="ico" viewBox="0 0 24 24"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg></button>
+      <span class="lang" id="langWrap"><button class="ib txt" id="langBtn" aria-haspopup="true" aria-expanded="false">LV</button><span id="langMenu" hidden></span></span>
+      <button class="ib fs" id="fs"><svg class="ico" viewBox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button>
+    </div>
+    <div class="br" id="bright">
+      <a class="credit" id="credit" href="https://flyframe.lv" target="_blank" rel="noopener">360° · <b>Fly Frame</b></a>
+    </div>
+  </footer>
+
+  <section id="card" hidden role="dialog" aria-live="polite">
+    <span class="k" id="cardK"></span>
+    <h2 id="cardT"></h2>
+    <p id="cardP"></p>
+    <button class="ib x" id="cardX"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </section>
+
+  <div id="hint" class="off"><svg class="ico" viewBox="0 0 24 24"><path d="M8 12h8M5 9l-3 3 3 3M19 9l3 3-3 3"/></svg><span id="hintT"></span></div>
+
+  <div id="veil" aria-hidden="true"><div class="ld"><span class="ldi"></span><p class="loading-text vT"></p></div></div>
+  <div id="loader"><div class="ld"><span class="lbrand"></span><span class="ldi"></span><p class="loading-text vT"></p></div></div>
+</div>
+<script src="tour360/viewer.js"></script>
+</body>
+</html>

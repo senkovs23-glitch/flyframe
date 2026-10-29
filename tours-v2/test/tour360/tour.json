@@ -48,9 +48,38 @@
   ],
   "defaultLang": "lv"
  },
- "map": {
-  "image": "map.jpg"
- },
+ "plans": [
+  {
+   "id": "teritorija",
+   "kind": "map",
+   "name": {
+    "lv": "Teritorija",
+    "ru": "Территория",
+    "lt": "Teritorija"
+   },
+   "image": "plans/teritorija.jpg"
+  },
+  {
+   "id": "stavs-1",
+   "kind": "plan",
+   "name": {
+    "lv": "1. stāvs",
+    "ru": "1 этаж",
+    "lt": "1 aukštas"
+   },
+   "image": "plans/stavs-1.jpg"
+  },
+  {
+   "id": "stavs-2",
+   "kind": "plan",
+   "name": {
+    "lv": "2. stāvs",
+    "ru": "2 этаж",
+    "lt": "2 aukštas"
+   },
+   "image": "plans/stavs-2.jpg"
+  }
+ ],
  "nodes": [
   {
    "id": "aero",
@@ -66,11 +95,6 @@
     "yaw": -2.3,
     "pitch": -58.4
    },
-   "map": [
-    0.4762,
-    0.6333
-   ],
-   "aerial": true,
    "links": [
     {
      "to": "iebrauktuve",
@@ -184,6 +208,12 @@
       "lt": "Ribos pažymėtos balta punktyrine linija. Demonstraciniai duomenys."
      }
     }
+   ],
+   "kind": "aerial",
+   "plan": "teritorija",
+   "pos": [
+    0.4762,
+    0.6333
    ]
   },
   {
@@ -200,11 +230,6 @@
     "yaw": 20.3,
     "pitch": -10.2
    },
-   "map": [
-    0.5405,
-    0.8238
-   ],
-   "aerial": false,
    "links": [
     {
      "to": "aero",
@@ -283,6 +308,12 @@
       "lt": "Privažiavimas ištisus metus."
      }
     }
+   ],
+   "kind": "outdoor",
+   "plan": "teritorija",
+   "pos": [
+    0.5405,
+    0.8238
    ]
   },
   {
@@ -299,11 +330,6 @@
     "yaw": -25,
     "pitch": 3
    },
-   "map": [
-    0.5429,
-    0.5476
-   ],
-   "aerial": false,
    "links": [
     {
      "to": "iebrauktuve",
@@ -324,6 +350,11 @@
      "to": "aero",
      "yaw": 0,
      "pitch": 72
+    },
+    {
+     "to": "virtuve",
+     "yaw": -40.09,
+     "pitch": -2.19
     }
    ],
    "spots": [
@@ -372,6 +403,12 @@
       "lt": "Vandens paviršius ~550 m²."
      }
     }
+   ],
+   "kind": "outdoor",
+   "plan": "teritorija",
+   "pos": [
+    0.5429,
+    0.5476
    ]
   },
   {
@@ -388,11 +425,6 @@
     "yaw": 130,
     "pitch": -2
    },
-   "map": [
-    0.5905,
-    0.6381
-   ],
-   "aerial": false,
    "links": [
     {
      "to": "iebrauktuve",
@@ -486,6 +518,12 @@
       "lt": "Privažiavimas ištisus metus."
      }
     }
+   ],
+   "kind": "outdoor",
+   "plan": "teritorija",
+   "pos": [
+    0.5905,
+    0.6381
    ]
   },
   {
@@ -502,11 +540,6 @@
     "yaw": -150,
     "pitch": 2
    },
-   "map": [
-    0.481,
-    0.2381
-   ],
-   "aerial": false,
    "links": [
     {
      "to": "pagalms",
@@ -535,8 +568,159 @@
       "lt": "Ūkinis pastatas, ~220 m²."
      }
     }
+   ],
+   "kind": "outdoor",
+   "plan": "teritorija",
+   "pos": [
+    0.481,
+    0.2381
+   ]
+  },
+  {
+   "id": "virtuve",
+   "name": {
+    "lv": "Virtuve",
+    "ru": "Кухня",
+    "lt": "Virtuvė"
+   },
+   "pano": "panos/virtuve.jpg",
+   "thumb": "thumbs/virtuve.jpg",
+   "heading": 0,
+   "start": {
+    "yaw": 0,
+    "pitch": -6
+   },
+   "kind": "indoor",
+   "plan": "stavs-1",
+   "pos": [
+    0.235,
+    0.5412
+   ],
+   "links": [
+    {
+     "to": "viesistaba",
+     "yaw": 91.97,
+     "pitch": -11.68
+    },
+    {
+     "to": "pagalms",
+     "yaw": -176.82,
+     "pitch": -9.45
+    }
+   ],
+   "spots": [
+    {
+     "kind": "info",
+     "yaw": -90,
+     "pitch": 8,
+     "title": {
+      "lv": "Logs uz rietumiem",
+      "ru": "Окно на запад",
+      "lt": "Langas į vakarus"
+     },
+     "text": {
+      "lv": "Vakara saule virtuvē. Demonstrācijas dati.",
+      "ru": "Вечернее солнце на кухне. Демонстрационные данные.",
+      "lt": "Vakaro saulė virtuvėje. Demonstraciniai duomenys."
+     }
+    }
+   ]
+  },
+  {
+   "id": "viesistaba",
+   "name": {
+    "lv": "Viesistaba",
+    "ru": "Гостиная",
+    "lt": "Svetainė"
+   },
+   "pano": "panos/viesistaba.jpg",
+   "thumb": "thumbs/viesistaba.jpg",
+   "heading": 0,
+   "start": {
+    "yaw": 40,
+    "pitch": -4
+   },
+   "kind": "indoor",
+   "plan": "stavs-1",
+   "pos": [
+    0.6427,
+    0.5206
+   ],
+   "links": [
+    {
+     "to": "virtuve",
+     "yaw": -95.53,
+     "pitch": -10.9
+    },
+    {
+     "to": "gulamistaba",
+     "yaw": 49.52,
+     "pitch": 0.0
+    }
+   ],
+   "spots": [
+    {
+     "kind": "info",
+     "yaw": 60,
+     "pitch": -14,
+     "title": {
+      "lv": "Kāpnes uz mansardu",
+      "ru": "Лестница в мансарду",
+      "lt": "Laiptai į mansardą"
+     },
+     "text": {
+      "lv": "Koka kāpnes uz 2. stāvu.",
+      "ru": "Деревянная лестница на 2 этаж.",
+      "lt": "Mediniai laiptai į 2 aukštą."
+     }
+    }
+   ]
+  },
+  {
+   "id": "gulamistaba",
+   "name": {
+    "lv": "Guļamistaba",
+    "ru": "Спальня",
+    "lt": "Miegamasis"
+   },
+   "pano": "panos/gulamistaba.jpg",
+   "thumb": "thumbs/gulamistaba.jpg",
+   "heading": 0,
+   "start": {
+    "yaw": -60,
+    "pitch": -6
+   },
+   "kind": "indoor",
+   "plan": "stavs-2",
+   "pos": [
+    0.6427,
+    0.5412
+   ],
+   "links": [
+    {
+     "to": "viesistaba",
+     "yaw": 55.27,
+     "pitch": -15.9
+    }
+   ],
+   "spots": [
+    {
+     "kind": "area",
+     "yaw": -120,
+     "pitch": -30,
+     "title": {
+      "lv": "Guļamistaba · ≈ 45 m²",
+      "ru": "Спальня · ≈ 45 м²",
+      "lt": "Miegamasis · ≈ 45 m²"
+     },
+     "text": {
+      "lv": "",
+      "ru": "",
+      "lt": ""
+     }
+    }
    ]
   }
  ],
- "generator": "Fly Frame 360° v2.0"
+ "generator": "Fly Frame 360° v2.1"
 }

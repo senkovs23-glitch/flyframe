@@ -1,13 +1,14 @@
-/* Fly Frame 360° viewer v2 — white-label. One tour = this folder; everything that changes lives in tour.json.
-   Open with #edit at the end of the address to load the editor (viewer/editor.js). */
+/* Fly Frame 360° viewer v2.1 — white-label.
+   A tour = tour360.html (any name) + the tour360/ folder next to it; everything that changes lives in tour360/tour.json,
+   with paths relative to that folder. Add #edit at the end of the address to load the editor (tour360/editor.js). */
 (() => {
   "use strict";
-  const VERSION = "2.0";
+  const VERSION = "2.1";
   const UI = {
-    lv: { loading: "Ielādē panorāmu...", map: "Karte", big: "Palielināt karti", rot: "Automātiskā rotācija", fs: "Pilnekrāns", close: "Aizvērt", hint: "Velciet, lai apskatītos apkārt", info: "Informācija", area: "Zemes gabals", fail: "Neizdevās ielādēt tūri.", file: "Tūri var atvērt tikai no tīmekļa vietnes (http/https), nevis kā failu datorā.", nogl: "Šī pārlūkprogramma neatbalsta WebGL, tāpēc 360° skatu nevar parādīt.", zin: "Pietuvināt", zout: "Attālināt", thumbs: "Skati", lang: "Valoda", empty: "Tūrē vēl nav neviena skata.", dirs: ["Z", "ZA", "A", "DA", "D", "DR", "R", "ZR"] },
-    ru: { loading: "Загрузка панорамы...", map: "Карта", big: "Увеличить карту", rot: "Автовращение", fs: "Во весь экран", close: "Закрыть", hint: "Потяните, чтобы осмотреться", info: "Информация", area: "Участок", fail: "Не удалось загрузить тур.", file: "Тур открывается только с сайта (http/https), а не как файл на компьютере.", nogl: "Браузер не поддерживает WebGL, поэтому 360° вид недоступен.", zin: "Приблизить", zout: "Отдалить", thumbs: "Виды", lang: "Язык", empty: "В туре пока нет ни одной точки.", dirs: ["С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ"] },
-    lt: { loading: "Įkeliama panorama...", map: "Žemėlapis", big: "Padidinti žemėlapį", rot: "Automatinis sukimas", fs: "Visas ekranas", close: "Uždaryti", hint: "Tempkite, kad apsižvalgytumėte", info: "Informacija", area: "Sklypas", fail: "Nepavyko įkelti turo.", file: "Turą galima atidaryti tik iš svetainės (http/https), o ne kaip failą kompiuteryje.", nogl: "Ši naršyklė nepalaiko WebGL, todėl 360° vaizdo parodyti negalima.", zin: "Priartinti", zout: "Nutolinti", thumbs: "Vaizdai", lang: "Kalba", empty: "Ture dar nėra nė vieno vaizdo.", dirs: ["Š", "ŠR", "R", "PR", "P", "PV", "V", "ŠV"] },
-    en: { loading: "Loading panorama...", map: "Map", big: "Enlarge map", rot: "Auto-rotate", fs: "Full screen", close: "Close", hint: "Drag to look around", info: "Information", area: "Plot", fail: "The tour could not be loaded.", file: "The tour opens only from a website (http/https), not as a file on the computer.", nogl: "This browser does not support WebGL, so the 360° view cannot be shown.", zin: "Zoom in", zout: "Zoom out", thumbs: "Scenes", lang: "Language", empty: "The tour has no scenes yet.", dirs: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"] }
+    lv: { loading: "Ielādē panorāmu...", map: "Karte un plāni", big: "Palielināt karti", rot: "Automātiskā rotācija", fs: "Pilnekrāns", close: "Aizvērt", hint: "Velciet, lai apskatītos apkārt", info: "Informācija", area: "Zemes gabals", fail: "Neizdevās ielādēt tūri.", file: "Tūri var atvērt tikai no tīmekļa vietnes (http/https), nevis kā failu datorā.", nogl: "Šī pārlūkprogramma neatbalsta WebGL, tāpēc 360° skatu nevar parādīt.", zin: "Pietuvināt", zout: "Attālināt", thumbs: "Skati", lang: "Valoda", empty: "Tūrē vēl nav neviena skata.", dirs: ["Z", "ZA", "A", "DA", "D", "DR", "R", "ZR"] },
+    ru: { loading: "Загрузка панорамы...", map: "Карта и планы", big: "Увеличить карту", rot: "Автовращение", fs: "Во весь экран", close: "Закрыть", hint: "Потяните, чтобы осмотреться", info: "Информация", area: "Участок", fail: "Не удалось загрузить тур.", file: "Тур открывается только с сайта (http/https), а не как файл на компьютере.", nogl: "Браузер не поддерживает WebGL, поэтому 360° вид недоступен.", zin: "Приблизить", zout: "Отдалить", thumbs: "Виды", lang: "Язык", empty: "В туре пока нет ни одной точки.", dirs: ["С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ"] },
+    lt: { loading: "Įkeliama panorama...", map: "Žemėlapis ir planai", big: "Padidinti žemėlapį", rot: "Automatinis sukimas", fs: "Visas ekranas", close: "Uždaryti", hint: "Tempkite, kad apsižvalgytumėte", info: "Informacija", area: "Sklypas", fail: "Nepavyko įkelti turo.", file: "Turą galima atidaryti tik iš svetainės (http/https), o ne kaip failą kompiuteryje.", nogl: "Ši naršyklė nepalaiko WebGL, todėl 360° vaizdo parodyti negalima.", zin: "Priartinti", zout: "Nutolinti", thumbs: "Vaizdai", lang: "Kalba", empty: "Ture dar nėra nė vieno vaizdo.", dirs: ["Š", "ŠR", "R", "PR", "P", "PV", "V", "ŠV"] },
+    en: { loading: "Loading panorama...", map: "Map and floor plans", big: "Enlarge map", rot: "Auto-rotate", fs: "Full screen", close: "Close", hint: "Drag to look around", info: "Information", area: "Plot", fail: "The tour could not be loaded.", file: "The tour opens only from a website (http/https), not as a file on the computer.", nogl: "This browser does not support WebGL, so the 360° view cannot be shown.", zin: "Zoom in", zout: "Zoom out", thumbs: "Scenes", lang: "Language", empty: "The tour has no scenes yet.", dirs: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"] }
   };
   const LANGS = ["lv", "ru", "lt", "en"];
   const PRESETS = {
@@ -17,6 +18,9 @@
   };
   const FONTS = { system: null, Manrope: "Manrope:wght@400;600;700;800", Inter: "Inter:wght@400;600;700;800", Montserrat: "Montserrat:wght@400;600;700;800", Roboto: "Roboto:wght@400;500;700;900", "Open Sans": "Open+Sans:wght@400;600;700;800", "PT Sans": "PT+Sans:wght@400;700", Raleway: "Raleway:wght@400;600;700;800" };
   const DEF_UI = { thumbs: true, map: true, autorotate: true, zoom: true, fullscreen: true, title: true, compass: true, hint: true, fov: 95, fovMin: 35, fovMax: 110, langs: ["lv", "ru", "lt"], defaultLang: "lv" };
+
+  // the folder this script lives in; every path in tour.json is relative to it
+  const BASE = new URL(".", (document.currentScript && document.currentScript.src) || location.href).href;
 
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => document.querySelectorAll(s);
@@ -35,8 +39,10 @@
   const ico = (d, extra = "") => `<svg class="ico" viewBox="0 0 24 24" ${extra}>${d}</svg>`;
 
   const FFV = window.FFV = window.FFV || {};
-  FFV.version = VERSION; FFV.EDIT = EDIT; FFV.PRESETS = PRESETS; FFV.FONTS = FONTS; FFV.DEF_UI = DEF_UI; FFV.LANGS = LANGS; FFV.UI = UI;
-  let resolve = (p) => p;              // the editor swaps this for local files it holds
+  Object.assign(FFV, { version: VERSION, EDIT, PRESETS, FONTS, DEF_UI, LANGS, UI, BASE });
+  const baseResolve = (p) => { if (!p) return p; try { return new URL(p, BASE).href; } catch (e) { return p; } };
+  let resolve = baseResolve;            // the editor swaps this for local files it holds
+  FFV.baseResolve = baseResolve;
   FFV.setResolver = (f) => { resolve = f; };
 
   let cfg = null, byId = {}, cur = null, tex = null, busy = false, lang = "lv";
@@ -64,8 +70,7 @@
     r.setProperty("--acc", t.accent); r.setProperty("--on-acc", onColor(t.accent));
     r.setProperty("--acc2", t.accent2 || t.accent); r.setProperty("--on-acc2", onColor(t.accent2 || t.accent));
     r.setProperty("--r", (+t.radius || 0) + "px");
-    const fam = FONTS[t.font] ? `"${t.font}", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif` : "";
-    if (fam) r.setProperty("--font", fam); else r.removeProperty("--font");
+    if (FONTS[t.font]) r.setProperty("--font", `"${t.font}", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif`); else r.removeProperty("--font");
     let link = $("#ffFont");
     if (FONTS[t.font]) {
       const href = `https://fonts.googleapis.com/css2?family=${FONTS[t.font]}&display=swap`;
@@ -73,7 +78,6 @@
       if (link.getAttribute("href") !== href) link.href = href;
     } else if (link) link.remove();
     document.documentElement.style.colorScheme = lum(hexRgb(t.panel)) > 0.5 ? "light" : "dark";
-    // loader / veil animation
     const ldi = t.loader === "plane" ? `<div class="flight-track"><div class="airplane-animation"><svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></div></div>`
       : t.loader === "logo" ? `<div class="logo-ld"></div>` : `<div class="ring-ld"></div>`;
     $$(".ldi").forEach((el) => { if (el.dataset.kind !== t.loader) { el.dataset.kind = t.loader; el.innerHTML = ldi; } });
@@ -85,17 +89,15 @@
     const logo = b.logo ? `<img src="${esc(resolve(b.logo))}" alt="${esc(b.name || "")}">` : (b.name ? `<span class="bname">${esc(b.name)}</span>` : "");
     a.innerHTML = logo;
     a.hidden = !logo;
-    if (b.url) { a.href = b.url; a.removeAttribute("aria-disabled"); a.style.pointerEvents = ""; } else { a.removeAttribute("href"); a.style.pointerEvents = "none"; }
-    document.documentElement.style.setProperty("--logo-h", clamp(+b.logoHeight || 34, 16, 60) + "px");
-    // logo colour: as is, white, dark, or auto (white on dark panels, dark on light ones)
+    if (b.url) { a.href = b.url; a.style.pointerEvents = ""; } else { a.removeAttribute("href"); a.style.pointerEvents = "none"; }
+    const r = document.documentElement.style;
+    r.setProperty("--logo-h", clamp(+b.logoHeight || 34, 16, 60) + "px");
     let tone = b.logoTone || "original";
     if (tone === "auto") tone = lum(hexRgb(themeOf(cfg).panel)) > 0.5 ? "dark" : "light";
-    const filter = tone === "light" ? "brightness(0) invert(1)" : tone === "dark" ? "brightness(0)" : "none";
-    document.documentElement.style.setProperty("--logo-filter", filter);
+    r.setProperty("--logo-filter", tone === "light" ? "brightness(0) invert(1)" : tone === "dark" ? "brightness(0)" : "none");
     $("#bsep").hidden = !logo || !cfg.ui.title;
     $("#credit").hidden = b.credit === false;
-    const lb = $("#loader .lbrand");
-    lb.innerHTML = b.logo ? `<img src="${esc(resolve(b.logo))}" alt="">` : (b.name ? `<span class="bname">${esc(b.name)}</span>` : "");
+    $("#loader .lbrand").innerHTML = b.logo ? `<img src="${esc(resolve(b.logo))}" alt="">` : (b.name ? `<span class="bname">${esc(b.name)}</span>` : "");
   }
 
   // ---------- WebGL ----------
@@ -206,11 +208,32 @@
     gl.drawElements(gl.TRIANGLES, SPH.count, gl.UNSIGNED_SHORT, 0);
   }
 
+  // ---------- plans ----------
+  const planById = (id) => (cfg.plans || []).find((p) => p.id === id);
+  const planIndex = (id) => (cfg.plans || []).findIndex((p) => p.id === id);
+  const kindOf = (n) => n.kind || (n.aerial ? "aerial" : "outdoor");
+  FFV.kindOf = kindOf;
+
   // ---------- hotspots ----------
   const spotsEl = $("#spots");
   let spotEls = [];
-  const ICON_UP = ico('<path d="M6 14l6-6 6 6"/>');
-  const ICON_DRONE = ico('<circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7 8l3 3M17 8l-3 3M7 16l3-3M17 16l-3-3"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/>', 'style="stroke-width:2"');
+  const ICONS = {
+    arrow: ico('<path d="M6 14l6-6 6 6"/>'),
+    door: ico('<path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17"/><path d="M3 21h18"/><path d="M14.5 12.5v.01"/>'),
+    up: ico('<path d="M3 20h5v-4h5v-4h5V8h3"/><path d="M14 3h6v6"/><path d="M20 3l-6 6"/>'),
+    down: ico('<path d="M3 8h5v4h5v4h5v4h3"/><path d="M14 3h6v6"/><path d="M14 9l6-6"/>'),
+    drone: ico('<circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7 8l3 3M17 8l-3 3M7 16l3-3M17 16l-3-3"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/>')
+  };
+  FFV.ICON_NAMES = Object.keys(ICONS);
+  function linkIcon(l, from, to) {
+    if (l.icon && l.icon !== "auto" && ICONS[l.icon]) return l.icon;
+    const a = kindOf(from), b = kindOf(to);
+    if (b === "aerial") return "drone";
+    if ((a === "indoor") !== (b === "indoor")) return "door";
+    if (a === "indoor" && b === "indoor" && from.plan && to.plan && from.plan !== to.plan) return planIndex(to.plan) > planIndex(from.plan) ? "up" : "down";
+    return "arrow";
+  }
+  FFV.linkIcon = linkIcon;
   function buildSpots() {
     spotsEl.innerHTML = ""; spotEls = [];
     if (!cur) return;
@@ -218,9 +241,9 @@
       const t = byId[l.to]; if (!t) continue;
       const b = document.createElement("button");
       b.className = "spot lnk";
-      b.innerHTML = `<span class="ring">${t.aerial ? ICON_DRONE : ICON_UP}</span><span class="pill">${esc(T(t.name))}</span>`;
+      b.innerHTML = `<span class="ring">${ICONS[linkIcon(l, cur, t)]}</span><span class="pill">${esc(T(t.name))}</span>`;
       b.setAttribute("aria-label", T(t.name));
-      b.addEventListener("click", (e) => { e.stopPropagation(); if (FFV.onSpotClick && FFV.onSpotClick("link", l)) return; go(l.to, l); });
+      b.addEventListener("click", (e) => { e.stopPropagation(); go(l.to, l); });
       spotsEl.appendChild(b); spotEls.push({ el: b, yaw: l.yaw, pitch: l.pitch, anchor: 24 });
     }
     for (const s of cur.spots || []) {
@@ -228,7 +251,7 @@
       b.className = "spot " + (s.kind === "area" ? "area" : "inf");
       b.innerHTML = s.kind === "area" ? `<span class="pill">${esc(T(s.title))}</span>` : `<span class="dot">i</span><span class="pill">${esc(T(s.title))}</span>`;
       b.setAttribute("aria-label", T(s.title));
-      b.addEventListener("click", (e) => { e.stopPropagation(); if (FFV.onSpotClick && FFV.onSpotClick("spot", s)) return; openCard(s); });
+      b.addEventListener("click", (e) => { e.stopPropagation(); openCard(s); });
       spotsEl.appendChild(b); spotEls.push({ el: b, yaw: s.yaw, pitch: s.pitch, anchor: s.kind === "area" ? 17 : 15 });
     }
   }
@@ -249,75 +272,112 @@
     $("#cardK").textContent = s.kind === "area" ? S().area : S().info;
     $("#cardT").textContent = T(s.title); $("#cardP").textContent = T(s.text);
     card.hidden = !T(s.title) && !T(s.text);
+    $("#app").classList.toggle("card-open", !card.hidden);
     turnTo(s.yaw, clamp(s.pitch, -60, 60), 600);
   }
-  function closeCard() { card.hidden = true; cardSpot = null; }
+  function closeCard() { card.hidden = true; cardSpot = null; $("#app").classList.remove("card-open"); }
   $("#cardX").addEventListener("click", closeCard);
 
-  // ---------- map ----------
+  // ---------- map + floor plans ----------
   const mapEl = $("#map"), mbox = $("#mbox");
-  let mapBtns = [], mapOpen = false;
-  const hasMap = () => !!(cfg && cfg.ui.map && cfg.map && cfg.map.image);
+  let mapBtns = [], mapOpen = false, shownPlan = null;
+  const hasMap = () => !!(cfg && cfg.ui.map && (cfg.plans || []).some((p) => p.image));
   function buildMap() {
     $("#mapBtn").hidden = !hasMap();
     if (!hasMap()) { mapEl.hidden = true; return; }
+    const plans = cfg.plans.filter((p) => p.image);
+    if (!plans.some((p) => p.id === shownPlan)) shownPlan = (cur && cur.plan && planById(cur.plan) && planById(cur.plan).image) ? cur.plan : plans[0].id;
+    const pl = planById(shownPlan);
+    const tabs = $("#planTabs");
+    tabs.hidden = plans.length < 2;
+    mapEl.classList.toggle("solo", plans.length < 2);
+    tabs.innerHTML = plans.map((p) => `<button role="tab" data-plan="${esc(p.id)}" aria-pressed="${p.id === shownPlan}">${esc(T(p.name) || p.id)}</button>`).join("");
     mapEl.hidden = !mapOpen;
-    const mi = $("#mapImg"), src = resolve(cfg.map.image);
-    mi.onload = () => { if (mi.naturalWidth) mbox.style.aspectRatio = mi.naturalWidth + " / " + mi.naturalHeight; };
+    const mi = $("#mapImg"), src = resolve(pl.image);
+    mi.onload = () => { if (mi.naturalWidth) mbox.style.aspectRatio = mi.naturalWidth + " / " + mi.naturalHeight; layout(); };
     if (mi.getAttribute("src") !== src) mi.src = src;
+    mi.alt = T(pl.name) || "";
+    $("#north").hidden = (pl.kind || "map") !== "map";
     mapBtns.forEach((b) => b.remove()); mapBtns = [];
     for (const n of cfg.nodes) {
-      if (!n.map) continue;
+      if (n.plan !== shownPlan || !n.pos) continue;
       const b = document.createElement("button");
       b.className = "mpt"; b.dataset.id = n.id;
-      b.style.left = (n.map[0] * 100) + "%"; b.style.top = (n.map[1] * 100) + "%";
+      b.style.left = (n.pos[0] * 100) + "%"; b.style.top = (n.pos[1] * 100) + "%";
       b.innerHTML = `<i></i><span>${esc(T(n.name))}</span>`;
       b.setAttribute("aria-label", T(n.name));
       b.addEventListener("click", (e) => { if (e.detail === 0 && !FFV.onMapPick) { e.stopPropagation(); mapGo(n.id); } });
       mbox.appendChild(b); mapBtns.push(b);
     }
-    markMap();
+    markMap(); layout(); dirty = true;
   }
+  // keep the map box at its image's proportions and inside the space between the strip and the band
+  function layout() {
+    const top = $("#top");
+    const th = top.classList.contains("off") ? 12 : Math.max(12, $("#strip").getBoundingClientRect().bottom);
+    document.documentElement.style.setProperty("--top-h", Math.round(th) + "px");
+    if (mapEl.hidden) return;
+    const mi = $("#mapImg"), ar = mi.naturalWidth ? mi.naturalWidth / mi.naturalHeight : 1;
+    const bottom = innerHeight - parseFloat(getComputedStyle(mapEl).bottom || "0");
+    const head = mapEl.classList.contains("solo") ? 0 : $(".mhead").getBoundingClientRect().height + 6;
+    const avail = bottom - th - 12 - 14 - head;
+    mbox.style.maxWidth = Math.max(90, Math.floor(avail * ar)) + "px";
+    dirty = true;
+  }
+  function showPlan(id) { if (id && planById(id)) { shownPlan = id; buildMap(); } }
+  $("#planTabs").addEventListener("click", (e) => { const b = e.target.closest("button[data-plan]"); if (b) showPlan(b.dataset.plan); });
   function setMapOpen(v, save) {
     mapOpen = !!v && hasMap();
     mapEl.hidden = !mapOpen;
     $("#mapBtn").setAttribute("aria-pressed", String(mapOpen));
     if (!mapOpen) mapEl.classList.remove("big");
     if (save) store.set("ff2-map", mapOpen ? "1" : "0");
-    dirty = true;
+    layout(); dirty = true;
   }
   function mapGo(id) { if (phone() && mapEl.classList.contains("big")) mapEl.classList.remove("big"); go(id); }
   mbox.addEventListener("click", (e) => {
-    if (!cfg || e.target.closest("#mapBig")) return;
+    if (!cfg) return;
     const r = mbox.getBoundingClientRect();
-    if (FFV.onMapPick) { FFV.onMapPick(+((e.clientX - r.left) / r.width).toFixed(4), +((e.clientY - r.top) / r.height).toFixed(4)); return; }
+    if (FFV.onMapPick) { FFV.onMapPick(shownPlan, +((e.clientX - r.left) / r.width).toFixed(4), +((e.clientY - r.top) / r.height).toFixed(4)); return; }
     let best = null, bd = 28;
     for (const n of cfg.nodes) {
-      if (!n.map) continue;
-      const d = Math.hypot(r.left + n.map[0] * r.width - e.clientX, r.top + n.map[1] * r.height - e.clientY);
+      if (n.plan !== shownPlan || !n.pos) continue;
+      const d = Math.hypot(r.left + n.pos[0] * r.width - e.clientX, r.top + n.pos[1] * r.height - e.clientY);
       if (d < bd) { bd = d; best = n; }
     }
     if (best) mapGo(best.id);
   });
   function markMap() { if (!cur) return; mapBtns.forEach((b) => { const on = b.dataset.id === cur.id; b.setAttribute("aria-current", String(on)); if (on) mbox.appendChild(b); }); }
   function placeCone() {
-    if (!cur || !cur.map || mapEl.hidden) { $("#cone").innerHTML = ""; return; }
-    const x = cur.map[0] * 100, y = cur.map[1] * 100, c = themeOf(cfg).accent;
-    const yaw = cam.yaw - (cur.heading || 0), half = Math.min(cam.hfov, 120) / 2, r = 22;
+    if (!cur || !cur.pos || cur.plan !== shownPlan || mapEl.hidden) { $("#cone").innerHTML = ""; return; }
+    const ar = mbox.clientWidth / Math.max(1, mbox.clientHeight);
+    const x = cur.pos[0] * 100, y = cur.pos[1] * 100, c = themeOf(cfg).accent;
+    const yaw = cam.yaw - (cur.heading || 0), half = Math.min(cam.hfov, 120) / 2, r = 20;
     const a1 = (yaw - half) * D2R, a2 = (yaw + half) * D2R;
-    const p1 = [x + Math.sin(a1) * r, y - Math.cos(a1) * r], p2 = [x + Math.sin(a2) * r, y - Math.cos(a2) * r];
-    $("#cone").innerHTML = `<defs><radialGradient id="cg" cx="${x}" cy="${y}" r="${r}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${esc(c)}" stop-opacity=".85"/><stop offset="1" stop-color="${esc(c)}" stop-opacity="0"/></radialGradient></defs>` +
-      `<path d="M${x} ${y}L${p1[0].toFixed(2)} ${p1[1].toFixed(2)}A${r} ${r} 0 0 1 ${p2[0].toFixed(2)} ${p2[1].toFixed(2)}Z" fill="url(#cg)"/>`;
+    // the svg is stretched to the box; scale x so the cone keeps its angle on non-square plans
+    const sx = 1 / ar;
+    const p1 = [x + Math.sin(a1) * r * sx, y - Math.cos(a1) * r], p2 = [x + Math.sin(a2) * r * sx, y - Math.cos(a2) * r];
+    $("#cone").innerHTML = `<defs><radialGradient id="cg" cx="${x}" cy="${y}" r="${r}" gradientUnits="userSpaceOnUse" gradientTransform="translate(${x} ${y}) scale(${sx} 1) translate(${-x} ${-y})"><stop offset="0" stop-color="${esc(c)}" stop-opacity=".85"/><stop offset="1" stop-color="${esc(c)}" stop-opacity="0"/></radialGradient></defs>` +
+      `<path d="M${x} ${y}L${p1[0].toFixed(2)} ${p1[1].toFixed(2)}A${(r * sx).toFixed(2)} ${r} 0 0 1 ${p2[0].toFixed(2)} ${p2[1].toFixed(2)}Z" fill="url(#cg)"/>`;
   }
   $("#mapBtn").addEventListener("click", () => setMapOpen(!mapOpen, true));
-  $("#mapBig").addEventListener("click", (e) => { e.stopPropagation(); mapEl.classList.toggle("big"); $("#mapBig").setAttribute("aria-pressed", String(mapEl.classList.contains("big"))); });
+  $("#mapBig").addEventListener("click", (e) => { e.stopPropagation(); mapEl.classList.toggle("big"); $("#mapBig").setAttribute("aria-pressed", String(mapEl.classList.contains("big"))); layout(); });
 
   // ---------- strip ----------
   let thumbsOpen = true;
   function buildStrip() {
     const s = $("#strip"); s.innerHTML = "";
     $("#thumbsBtn").hidden = !cfg.ui.thumbs || cfg.nodes.length < 2;
+    const grouped = (cfg.plans || []).length > 1;
+    let last, row = s;
     for (const n of cfg.nodes) {
+      if (grouped && (n.plan || "") !== last) {
+        last = n.plan || "";
+        const p = planById(n.plan), g = document.createElement("div");
+        g.className = "tg";
+        g.innerHTML = `<span class="tgl">${esc(p ? T(p.name) : "")}</span><div class="tgr"></div>`;
+        s.appendChild(g); row = g.lastChild;
+      }
       const b = document.createElement("button");
       b.className = "th"; b.dataset.id = n.id;
       const im = n.thumb || n.pano;
@@ -325,7 +385,7 @@
       b.innerHTML = `<span>${esc(T(n.name))}</span>`;
       b.title = T(n.name);
       b.addEventListener("click", () => go(n.id));
-      s.appendChild(b);
+      row.appendChild(b);
     }
     setThumbs(thumbsOpen);
   }
@@ -335,6 +395,7 @@
     $("#top").classList.toggle("off", !show);
     $("#thumbsBtn").setAttribute("aria-pressed", String(show));
     if (save) store.set("ff2-thumbs", thumbsOpen ? "1" : "0");
+    setTimeout(layout, 400); layout();
   }
   $("#thumbsBtn").addEventListener("click", () => setThumbs(!thumbsOpen, true));
   function markStrip() {
@@ -344,9 +405,12 @@
 
   // ---------- text + language ----------
   function updateScene() {
-    if (!cur) { $("#scene").textContent = ""; return; }
+    if (!cur) { $("#scene").textContent = ""; $("#sceneTag").textContent = ""; return; }
     const h = ((Math.round(cam.yaw - (cur.heading || 0)) % 360) + 360) % 360;
-    $("#scene").innerHTML = `<b>${esc(T(cur.name))}</b>` + (cfg.ui.compass ? ` · ${String(h).padStart(3, "0")}° ${S().dirs[Math.round(h / 45) % 8]}` : "");
+    const course = cfg.ui.compass ? `${String(h).padStart(3, "0")}° ${S().dirs[Math.round(h / 45) % 8]}` : "";
+    const p = planById(cur.plan), floor = p && (p.kind === "plan") ? T(p.name) : "";
+    $("#scene").innerHTML = `<b>${esc(T(cur.name))}</b>` + (floor ? ` · ${esc(floor)}` : "") + (course ? ` · ${course}` : "");
+    $("#sceneTag").innerHTML = esc(T(cur.name)) + (floor ? `<small>${esc(floor)}</small>` : "");
   }
   function langs() { const l = (cfg && cfg.ui.langs || DEF_UI.langs).filter((x) => LANGS.includes(x)); return l.length ? l : ["lv"]; }
   function buildLang() {
@@ -379,7 +443,6 @@
     const u = cfg.ui;
     $$(".zoom").forEach((el) => el.hidden = !u.zoom);
     $("#fs").hidden = !u.fullscreen || !(document.fullscreenEnabled || document.webkitFullscreenEnabled);
-    $("#rot").hidden = false;
   }
 
   // ---------- tweens ----------
@@ -419,6 +482,7 @@
     cam.pitch = s.pitch;
     const zoomIn = Math.max(fovMin(), target - 12);
     cam.hfov = zoomIn;
+    if (cur.plan && cur.plan !== shownPlan && planById(cur.plan)) { shownPlan = cur.plan; buildMap(); }
     buildSpots(); markStrip(); markMap(); updateScene(); dirty = true;
     if (FFV.onScene) FFV.onScene(cur);
     await sleep(60);
@@ -430,7 +494,6 @@
   }
   function preload() { for (const l of (cur && cur.links) || []) if (byId[l.to]) loadImg(byId[l.to].pano).catch(() => {}); }
   async function reloadPano(node) {
-    // the editor calls this after a photo was replaced
     Object.keys(imgCache).forEach((k) => delete imgCache[k]);
     if (node && cur && node.id === cur.id) {
       try { const img = await loadImg(node.pano); const old = tex; tex = makeTex(img); if (old) gl.deleteTexture(old); dirty = true; } catch (e) {}
@@ -517,9 +580,19 @@
     c.theme = c.theme || { preset: "dark" };
     c.brand = c.brand || { credit: true };
     c.nodes = c.nodes || [];
-    c.map = c.map || { image: "" };
+    // v1 / v2.0: one map + node.map → plans[] + node.plan / node.pos
+    if (!Array.isArray(c.plans)) {
+      c.plans = [];
+      if (c.map && c.map.image) {
+        c.plans.push({ id: "map", kind: "map", name: { lv: "Karte", ru: "Карта", lt: "Žemėlapis", en: "Map" }, image: c.map.image });
+        c.nodes.forEach((n) => { if (n.map && !n.pos) { n.plan = "map"; n.pos = n.map; } });
+      }
+    }
+    delete c.map;
+    c.nodes.forEach((n) => { delete n.map; if (!n.kind) n.kind = n.aerial ? "aerial" : "outdoor"; n.aerial = n.kind === "aerial"; });
     return c;
   }
+  FFV.normalize = normalize;
   async function setConfig(c, keepView) {
     cfg = normalize(c); byId = {}; cfg.nodes.forEach((n) => byId[n.id] = n);
     applyTheme(); applyBrand(); applyUI();
@@ -536,6 +609,7 @@
     const old = tex; tex = makeTex(img); if (old) gl.deleteTexture(old);
     cur = n;
     if (!keepCam) { const s = n.start || { yaw: 0, pitch: 0 }; cam.yaw = s.yaw; cam.pitch = s.pitch; cam.hfov = baseFov(n); }
+    if (n.plan && planById(n.plan)) { shownPlan = n.plan; buildMap(); }
     buildSpots(); markStrip(); markMap(); updateScene(); dirty = true;
     if (FFV.onScene) FFV.onScene(cur);
   }
@@ -544,23 +618,25 @@
     get cfg() { return cfg; }, get cur() { return cur; }, cam, canvas,
     go, turnTo, project, unproject, draw, showNode, reloadPano, resolve: (p) => resolve(p),
     refresh(keepView = true) { return setConfig(cfg, keepView); },
-    setConfig, applyTheme, applyBrand, applyText, applyUI, buildMap, buildStrip, buildSpots, setMapOpen, setThumbs,
+    setConfig, applyTheme, applyBrand, applyText, applyUI, buildMap, buildStrip, buildSpots, setMapOpen, setThumbs, showPlan,
+    get shownPlan() { return shownPlan; }, get mapOpen() { return mapOpen; }, layout,
     baseFov, fovMin, fovMax, T, get lang() { return lang; }, setLang,
     markDirty() { dirty = true; }, closeCard, openCard
   };
 
   // ---------- boot ----------
-  addEventListener("resize", resize);
+  addEventListener("resize", () => { resize(); layout(); });
   resize();
   requestAnimationFrame(frame);
   const loadScript = (src) => new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
   (async () => {
     const t0 = performance.now();
     let c = null;
-    try { const r = await fetch("tour.json", { cache: "no-cache" }); if (!r.ok) throw new Error(r.status); c = await r.json(); }
+    try { const r = await fetch(BASE + "tour.json", { cache: "no-cache" }); if (!r.ok) throw new Error(r.status); c = await r.json(); }
     catch (e) { if (!EDIT) { showMsg(location.protocol === "file:" ? UI.lv.file + " / " + UI.ru.file : UI.lv.fail); return; } }
     if (EDIT) {
-      try { await loadScript("viewer/editor.js?v=" + VERSION); c = await FFV.editorInit(c); }
+      $("#app").classList.add("editing");
+      try { await loadScript(BASE + "editor.js?v=" + VERSION); c = await FFV.editorInit(c); }
       catch (e) { console.error(e); }
     }
     await setConfig(c);
