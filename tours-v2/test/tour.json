@@ -1,0 +1,542 @@
+{
+ "title": {
+  "lv": "Lauku māja Latgalē",
+  "ru": "Хутор в Латгалии",
+  "lt": "Sodyba Latgaloje"
+ },
+ "badge": {
+  "lv": "Demo tūre",
+  "ru": "Демо-тур",
+  "lt": "Demo turas"
+ },
+ "start": "aero",
+ "theme": {
+  "preset": "dark",
+  "panel": "#0b0b0c",
+  "panelOpacity": 0.62,
+  "text": "#ffffff",
+  "accent": "#ffffff",
+  "accent2": "#ffffff",
+  "radius": 4,
+  "font": "system",
+  "loader": "ring"
+ },
+ "brand": {
+  "logo": "brand/logo.svg",
+  "logoHeight": 34,
+  "name": "",
+  "url": "",
+  "credit": true,
+  "logoTone": "auto"
+ },
+ "ui": {
+  "thumbs": true,
+  "map": true,
+  "autorotate": true,
+  "zoom": true,
+  "fullscreen": true,
+  "title": true,
+  "compass": true,
+  "hint": true,
+  "fov": 95,
+  "fovMin": 35,
+  "fovMax": 110,
+  "langs": [
+   "lv",
+   "ru",
+   "lt"
+  ],
+  "defaultLang": "lv"
+ },
+ "map": {
+  "image": "map.jpg"
+ },
+ "nodes": [
+  {
+   "id": "aero",
+   "name": {
+    "lv": "Skats no 60 m",
+    "ru": "Вид с высоты 60 м",
+    "lt": "Vaizdas iš 60 m"
+   },
+   "pano": "panos/aero.jpg",
+   "thumb": "thumbs/aero.jpg",
+   "heading": 0,
+   "start": {
+    "yaw": -2.3,
+    "pitch": -58.4
+   },
+   "map": [
+    0.4762,
+    0.6333
+   ],
+   "aerial": true,
+   "links": [
+    {
+     "to": "iebrauktuve",
+     "yaw": 162.39,
+     "pitch": -53.99
+    },
+    {
+     "to": "pagalms",
+     "yaw": 18.18,
+     "pitch": -66.19
+    },
+    {
+     "to": "darzs",
+     "yaw": -2.4,
+     "pitch": -47.2
+    },
+    {
+     "to": "dikis",
+     "yaw": 123.84,
+     "pitch": -65.47
+    }
+   ],
+   "spots": [
+    {
+     "kind": "info",
+     "yaw": 13.24,
+     "pitch": -56.51,
+     "title": {
+      "lv": "Dzīvojamā māja",
+      "ru": "Жилой дом",
+      "lt": "Gyvenamasis namas"
+     },
+     "text": {
+      "lv": "Koka māja, ~104 m² apbūves laukums, 1 stāvs ar bēniņiem.",
+      "ru": "Деревянный дом, ~104 м² площадь застройки, 1 этаж с мансардой.",
+      "lt": "Medinis namas, ~104 m² užstatymo plotas, 1 aukštas su mansarda."
+     }
+    },
+    {
+     "kind": "info",
+     "yaw": -24.3,
+     "pitch": -37.92,
+     "title": {
+      "lv": "Kūts",
+      "ru": "Хлев",
+      "lt": "Tvartas"
+     },
+     "text": {
+      "lv": "Saimniecības ēka, ~220 m².",
+      "ru": "Хозяйственная постройка, ~220 м².",
+      "lt": "Ūkinis pastatas, ~220 m²."
+     }
+    },
+    {
+     "kind": "info",
+     "yaw": 66.37,
+     "pitch": -57.86,
+     "title": {
+      "lv": "Pirts",
+      "ru": "Баня",
+      "lt": "Pirtis"
+     },
+     "text": {
+      "lv": "Pirts pie dīķa, ~20 m².",
+      "ru": "Баня у пруда, ~20 м².",
+      "lt": "Pirtis prie tvenkinio, ~20 m²."
+     }
+    },
+    {
+     "kind": "info",
+     "yaw": 109.29,
+     "pitch": -54.63,
+     "title": {
+      "lv": "Dīķis",
+      "ru": "Пруд",
+      "lt": "Tvenkinys"
+     },
+     "text": {
+      "lv": "Ūdens spogulis ~550 m².",
+      "ru": "Зеркало воды ~550 м².",
+      "lt": "Vandens paviršius ~550 m²."
+     }
+    },
+    {
+     "kind": "info",
+     "yaw": 133.53,
+     "pitch": -30.97,
+     "title": {
+      "lv": "Grants ceļš",
+      "ru": "Гравийная дорога",
+      "lt": "Žvyrkelis"
+     },
+     "text": {
+      "lv": "Piebraukšana visu gadu.",
+      "ru": "Подъезд круглый год.",
+      "lt": "Privažiavimas ištisus metus."
+     }
+    },
+    {
+     "kind": "area",
+     "yaw": 83.66,
+     "pitch": -69.26,
+     "title": {
+      "lv": "Zemes gabals · 1,9 ha",
+      "ru": "Участок · 1,9 га",
+      "lt": "Sklypas · 1,9 ha"
+     },
+     "text": {
+      "lv": "Robežas atzīmētas ar baltu punktlīniju. Demonstrācijas dati.",
+      "ru": "Границы обозначены белым пунктиром. Демонстрационные данные.",
+      "lt": "Ribos pažymėtos balta punktyrine linija. Demonstraciniai duomenys."
+     }
+    }
+   ]
+  },
+  {
+   "id": "iebrauktuve",
+   "name": {
+    "lv": "Iebrauktuve",
+    "ru": "Въезд",
+    "lt": "Įvažiavimas"
+   },
+   "pano": "panos/iebrauktuve.jpg",
+   "thumb": "thumbs/iebrauktuve.jpg",
+   "heading": 0,
+   "start": {
+    "yaw": 20.3,
+    "pitch": -10.2
+   },
+   "map": [
+    0.5405,
+    0.8238
+   ],
+   "aerial": false,
+   "links": [
+    {
+     "to": "aero",
+     "yaw": 0,
+     "pitch": 72
+    },
+    {
+     "to": "pagalms",
+     "yaw": -4.79,
+     "pitch": 0.03
+    },
+    {
+     "to": "dikis",
+     "yaw": 22.39,
+     "pitch": -3.21
+    }
+   ],
+   "spots": [
+    {
+     "kind": "info",
+     "yaw": -4.25,
+     "pitch": 4.32,
+     "title": {
+      "lv": "Dzīvojamā māja",
+      "ru": "Жилой дом",
+      "lt": "Gyvenamasis namas"
+     },
+     "text": {
+      "lv": "Koka māja, ~104 m² apbūves laukums, 1 stāvs ar bēniņiem.",
+      "ru": "Деревянный дом, ~104 м² площадь застройки, 1 этаж с мансардой.",
+      "lt": "Medinis namas, ~104 m² užstatymo plotas, 1 aukštas su mansarda."
+     }
+    },
+    {
+     "kind": "info",
+     "yaw": -22.14,
+     "pitch": 2.81,
+     "title": {
+      "lv": "Kūts",
+      "ru": "Хлев",
+      "lt": "Tvartas"
+     },
+     "text": {
+      "lv": "Saimniecības ēka, ~220 m².",
+      "ru": "Хозяйственная постройка, ~220 м².",
+      "lt": "Ūkinis pastatas, ~220 m²."
+     }
+    },
+    {
+     "kind": "info",
+     "yaw": 18.91,
+     "pitch": 2.81,
+     "title": {
+      "lv": "Pirts",
+      "ru": "Баня",
+      "lt": "Pirtis"
+     },
+     "text": {
+      "lv": "Pirts pie dīķa, ~20 m².",
+      "ru": "Баня у пруда, ~20 м².",
+      "lt": "Pirtis prie tvenkinio, ~20 m²."
+     }
+    },
+    {
+     "kind": "info",
+     "yaw": 115.88,
+     "pitch": -1.06,
+     "title": {
+      "lv": "Grants ceļš",
+      "ru": "Гравийная дорога",
+      "lt": "Žvyrkelis"
+     },
+     "text": {
+      "lv": "Piebraukšana visu gadu.",
+      "ru": "Подъезд круглый год.",
+      "lt": "Privažiavimas ištisus metus."
+     }
+    }
+   ]
+  },
+  {
+   "id": "pagalms",
+   "name": {
+    "lv": "Pagalms",
+    "ru": "Двор",
+    "lt": "Kiemas"
+   },
+   "pano": "panos/pagalms.jpg",
+   "thumb": "thumbs/pagalms.jpg",
+   "heading": 0,
+   "start": {
+    "yaw": -25,
+    "pitch": 3
+   },
+   "map": [
+    0.5429,
+    0.5476
+   ],
+   "aerial": false,
+   "links": [
+    {
+     "to": "iebrauktuve",
+     "yaw": -179.51,
+     "pitch": -1.43
+    },
+    {
+     "to": "dikis",
+     "yaw": 152.24,
+     "pitch": -3.86
+    },
+    {
+     "to": "darzs",
+     "yaw": -11.31,
+     "pitch": -1.25
+    },
+    {
+     "to": "aero",
+     "yaw": 0,
+     "pitch": 72
+    }
+   ],
+   "spots": [
+    {
+     "kind": "info",
+     "yaw": -20.56,
+     "pitch": 18.14,
+     "title": {
+      "lv": "Dzīvojamā māja",
+      "ru": "Жилой дом",
+      "lt": "Gyvenamasis namas"
+     },
+     "text": {
+      "lv": "Koka māja, ~104 m² apbūves laukums, 1 stāvs ar bēniņiem.",
+      "ru": "Деревянный дом, ~104 м² площадь застройки, 1 этаж с мансардой.",
+      "lt": "Medinis namas, ~104 m² užstatymo plotas, 1 aukštas su mansarda."
+     }
+    },
+    {
+     "kind": "info",
+     "yaw": 102.53,
+     "pitch": 8.63,
+     "title": {
+      "lv": "Pirts",
+      "ru": "Баня",
+      "lt": "Pirtis"
+     },
+     "text": {
+      "lv": "Pirts pie dīķa, ~20 m².",
+      "ru": "Баня у пруда, ~20 м².",
+      "lt": "Pirtis prie tvenkinio, ~20 m²."
+     }
+    },
+    {
+     "kind": "info",
+     "yaw": 140.91,
+     "pitch": -1.81,
+     "title": {
+      "lv": "Dīķis",
+      "ru": "Пруд",
+      "lt": "Tvenkinys"
+     },
+     "text": {
+      "lv": "Ūdens spogulis ~550 m².",
+      "ru": "Зеркало воды ~550 м².",
+      "lt": "Vandens paviršius ~550 m²."
+     }
+    }
+   ]
+  },
+  {
+   "id": "dikis",
+   "name": {
+    "lv": "Pie dīķa",
+    "ru": "У пруда",
+    "lt": "Prie tvenkinio"
+   },
+   "pano": "panos/dikis.jpg",
+   "thumb": "thumbs/dikis.jpg",
+   "heading": 0,
+   "start": {
+    "yaw": 130,
+    "pitch": -2
+   },
+   "map": [
+    0.5905,
+    0.6381
+   ],
+   "aerial": false,
+   "links": [
+    {
+     "to": "iebrauktuve",
+     "yaw": -164.93,
+     "pitch": -2.06
+    },
+    {
+     "to": "aero",
+     "yaw": 0,
+     "pitch": 72
+    },
+    {
+     "to": "pagalms",
+     "yaw": -31.95,
+     "pitch": -2.32
+    }
+   ],
+   "spots": [
+    {
+     "kind": "info",
+     "yaw": -24.57,
+     "pitch": 8.28,
+     "title": {
+      "lv": "Dzīvojamā māja",
+      "ru": "Жилой дом",
+      "lt": "Gyvenamasis namas"
+     },
+     "text": {
+      "lv": "Koka māja, ~104 m² apbūves laukums, 1 stāvs ar bēniņiem.",
+      "ru": "Деревянный дом, ~104 м² площадь застройки, 1 этаж с мансардой.",
+      "lt": "Medinis namas, ~104 m² užstatymo plotas, 1 aukštas su mansarda."
+     }
+    },
+    {
+     "kind": "info",
+     "yaw": -39.54,
+     "pitch": 3.78,
+     "title": {
+      "lv": "Kūts",
+      "ru": "Хлев",
+      "lt": "Tvartas"
+     },
+     "text": {
+      "lv": "Saimniecības ēka, ~220 m².",
+      "ru": "Хозяйственная постройка, ~220 м².",
+      "lt": "Ūkinis pastatas, ~220 m²."
+     }
+    },
+    {
+     "kind": "info",
+     "yaw": 28.07,
+     "pitch": 9.35,
+     "title": {
+      "lv": "Pirts",
+      "ru": "Баня",
+      "lt": "Pirtis"
+     },
+     "text": {
+      "lv": "Pirts pie dīķa, ~20 m².",
+      "ru": "Баня у пруда, ~20 м².",
+      "lt": "Pirtis prie tvenkinio, ~20 m²."
+     }
+    },
+    {
+     "kind": "info",
+     "yaw": 129.09,
+     "pitch": -3.61,
+     "title": {
+      "lv": "Dīķis",
+      "ru": "Пруд",
+      "lt": "Tvenkinys"
+     },
+     "text": {
+      "lv": "Ūdens spogulis ~550 m².",
+      "ru": "Зеркало воды ~550 м².",
+      "lt": "Vandens paviršius ~550 m²."
+     }
+    },
+    {
+     "kind": "info",
+     "yaw": 144.54,
+     "pitch": -0.83,
+     "title": {
+      "lv": "Grants ceļš",
+      "ru": "Гравийная дорога",
+      "lt": "Žvyrkelis"
+     },
+     "text": {
+      "lv": "Piebraukšana visu gadu.",
+      "ru": "Подъезд круглый год.",
+      "lt": "Privažiavimas ištisus metus."
+     }
+    }
+   ]
+  },
+  {
+   "id": "darzs",
+   "name": {
+    "lv": "Augļu dārzs",
+    "ru": "Сад",
+    "lt": "Sodas"
+   },
+   "pano": "panos/darzs.jpg",
+   "thumb": "thumbs/darzs.jpg",
+   "heading": 0,
+   "start": {
+    "yaw": -150,
+    "pitch": 2
+   },
+   "map": [
+    0.481,
+    0.2381
+   ],
+   "aerial": false,
+   "links": [
+    {
+     "to": "pagalms",
+     "yaw": 168.69,
+     "pitch": -1.25
+    },
+    {
+     "to": "aero",
+     "yaw": 0,
+     "pitch": 72
+    }
+   ],
+   "spots": [
+    {
+     "kind": "info",
+     "yaw": -125.91,
+     "pitch": 8.58,
+     "title": {
+      "lv": "Kūts",
+      "ru": "Хлев",
+      "lt": "Tvartas"
+     },
+     "text": {
+      "lv": "Saimniecības ēka, ~220 m².",
+      "ru": "Хозяйственная постройка, ~220 м².",
+      "lt": "Ūkinis pastatas, ~220 m²."
+     }
+    }
+   ]
+  }
+ ],
+ "generator": "Fly Frame 360° v2.0"
+}
