@@ -92,6 +92,14 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--acc2); outline-
 /* ---------- hotspots ---------- */
 #spots { position: absolute; inset: 0; pointer-events: none; z-index: 3; transition: opacity .3s; }
 #spots.hide { opacity: 0; }
+/* plaques pinned to the photo: viewer.js gives each one a 3D matrix every frame, this layer only supplies the perspective */
+#signs { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; perspective: 900px; perspective-origin: 50% 50%; transition: opacity .3s; }
+#signs.hide { opacity: 0; }
+.sign { position: absolute; left: 50%; top: 50%; width: 340px; box-sizing: border-box; padding: 16px 20px 18px 28px; overflow: hidden; transform-origin: 0 0; will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  background: var(--panel-strong); color: var(--fg); border: 2px solid rgba(var(--fg-rgb), .85); border-radius: var(--r); box-shadow: 0 6px 22px rgba(0, 0, 0, .35); text-align: left; pointer-events: none; }
+.sign::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 8px; background: var(--acc2); }
+.sign .sg-t { display: block; font-size: 26px; font-weight: 800; line-height: 1.2; overflow-wrap: anywhere; text-wrap: balance; }
+.sign .sg-x { display: block; margin-top: 7px; font-size: 17px; font-weight: 500; line-height: 1.4; color: var(--muted); white-space: pre-line; overflow-wrap: anywhere; }
 .spot { position: absolute; left: 0; top: 0; pointer-events: auto; appearance: none; border: 0; background: none; padding: 0; color: var(--fg); cursor: pointer; display: grid; justify-items: center; gap: 7px; will-change: transform; }
 .spot .pill { font-size: 12.5px; font-weight: 700; white-space: nowrap; padding: 6px 12px; border-radius: min(var(--r), 99px); background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: border-color .2s; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
 .lnk .ring { width: 48px; height: 48px; border-radius: 50%; background: var(--acc); color: var(--on-acc); display: grid; place-items: center; box-shadow: 0 0 0 7px rgba(var(--fg-rgb), .18), 0 8px 22px rgba(0, 0, 0, .3); transition: transform .2s, box-shadow .2s; }

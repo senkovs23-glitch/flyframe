@@ -17,7 +17,7 @@
     flyframe: { panel: "#112642", panelOpacity: 0.82, text: "#ffffff", accent: "#3d8bff", accent2: "#2ed3c3", radius: 14, font: "Manrope", loader: "plane" }
   };
   const FONTS = { system: null, Manrope: "Manrope:wght@400;600;700;800", Inter: "Inter:wght@400;600;700;800", Montserrat: "Montserrat:wght@400;600;700;800", Roboto: "Roboto:wght@400;500;700;900", "Open Sans": "Open+Sans:wght@400;600;700;800", "PT Sans": "PT+Sans:wght@400;700", Raleway: "Raleway:wght@400;600;700;800" };
-  const DEF_UI = { thumbs: true, map: true, autorotate: true, zoom: true, fullscreen: true, title: true, compass: true, hint: true, fov: 95, fovMin: 35, fovMax: 110, langs: ["lv", "ru", "lt"], defaultLang: "lv" };
+  const DEF_UI = { thumbs: true, map: true, autorotate: true, zoom: true, fullscreen: true, title: true, compass: true, hint: true, fov: 95, fovMin: 35, fovMax: 110, linkSize: 1, spotSize: 1, langs: ["lv", "ru", "lt"], defaultLang: "lv" };
 
   // the folder this script lives in; every path in tour.json is relative to it
   const BASE = new URL(".", (document.currentScript && document.currentScript.src) || location.href).href;
@@ -216,26 +216,33 @@
 
   // ---------- hotspots ----------
   const spotsEl = $("#spots");
-  let spotEls = [];
+  // "signs" = plaques pinned to a surface of the photo; they live in their own layer with CSS perspective (see placeSigns)
+  let signsEl = $("#signs");
+  if (!signsEl) { signsEl = document.createElement("div"); signsEl.id = "signs"; spotsEl.parentNode.insertBefore(signsEl, spotsEl); }
+  let spotEls = [], signEls = [];
   const ICONS = {
     arrow: ico('<path d="M6 14l6-6 6 6"/>'),
     door: ico('<path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17"/><path d="M3 21h18"/><path d="M14.5 12.5v.01"/>'),
-    up: ico('<path d="M3 20h5v-4h5v-4h5V8h3"/><path d="M14 3h6v6"/><path d="M20 3l-6 6"/>'),
-    down: ico('<path d="M3 8h5v4h5v4h5v4h3"/><path d="M14 3h6v6"/><path d="M14 9l6-6"/>'),
+    stairs: ico('<path d="M3.5 20.5v-4.5h4.5v-4.5h4.5v-4.5h4.5v-4.5h4v18z"/>'),
     drone: ico('<circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7 8l3 3M17 8l-3 3M7 16l3-3M17 16l-3-3"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/>')
   };
   FFV.ICON_NAMES = Object.keys(ICONS);
+  // v2.1 early drafts had two staircase icons with arrows (up / down); both are now the single "stairs" pictogram
+  const iconName = (n) => (n === "up" || n === "down") ? "stairs" : n;
   function linkIcon(l, from, to) {
-    if (l.icon && l.icon !== "auto" && ICONS[l.icon]) return l.icon;
+    const own = iconName(l.icon);
+    if (own && own !== "auto" && ICONS[own]) return own;
     const a = kindOf(from), b = kindOf(to);
     if (b === "aerial") return "drone";
     if ((a === "indoor") !== (b === "indoor")) return "door";
-    if (a === "indoor" && b === "indoor" && from.plan && to.plan && from.plan !== to.plan) return planIndex(to.plan) > planIndex(from.plan) ? "up" : "down";
+    if (a === "indoor" && b === "indoor" && from.plan && to.plan && from.plan !== to.plan) return "stairs";
     return "arrow";
   }
   FFV.linkIcon = linkIcon;
+  // size = global slider (ui.linkSize / ui.spotSize) × the item's own size; the button grows around the point it is attached to
+  const sizeK = (global, own) => clamp((+global || 1) * (+own || 1), 0.4, 3.2);
   function buildSpots() {
-    spotsEl.innerHTML = ""; spotEls = [];
+    spotsEl.innerHTML = ""; signsEl.innerHTML = ""; spotEls = []; signEls = [];
     if (!cur) return;
     for (const l of cur.links || []) {
       const t = byId[l.to]; if (!t) continue;
@@ -244,23 +251,73 @@
       b.innerHTML = `<span class="ring">${ICONS[linkIcon(l, cur, t)]}</span><span class="pill">${esc(T(t.name))}</span>`;
       b.setAttribute("aria-label", T(t.name));
       b.addEventListener("click", (e) => { e.stopPropagation(); go(l.to, l); });
-      spotsEl.appendChild(b); spotEls.push({ el: b, yaw: l.yaw, pitch: l.pitch, anchor: 24 });
+      b.style.transformOrigin = "50% 24px";
+      spotsEl.appendChild(b); spotEls.push({ el: b, yaw: l.yaw, pitch: l.pitch, anchor: 24, k: sizeK(cfg.ui.linkSize, l.size) });
     }
     for (const s of cur.spots || []) {
+      if (s.kind === "area" && s.pin) {
+        const d = document.createElement("div");
+        d.className = "sign";
+        d.innerHTML = `<b class="sg-t">${esc(T(s.title))}</b>` + (T(s.text) ? `<span class="sg-x">${esc(T(s.text))}</span>` : "");
+        signsEl.appendChild(d);
+        signEls.push({ el: d, yaw: s.yaw, pitch: s.pitch, w: clamp(+s.w || 20, 4, 70), turn: clamp(+s.turn || 0, -85, 85), tilt: clamp(+s.tilt || 0, -85, 85), roll: clamp(+s.roll || 0, -180, 180) });
+        continue;
+      }
       const b = document.createElement("button");
       b.className = "spot " + (s.kind === "area" ? "area" : "inf");
       b.innerHTML = s.kind === "area" ? `<span class="pill">${esc(T(s.title))}</span>` : `<span class="dot">i</span><span class="pill">${esc(T(s.title))}</span>`;
       b.setAttribute("aria-label", T(s.title));
       b.addEventListener("click", (e) => { e.stopPropagation(); openCard(s); });
-      spotsEl.appendChild(b); spotEls.push({ el: b, yaw: s.yaw, pitch: s.pitch, anchor: s.kind === "area" ? 17 : 15 });
+      const anchor = s.kind === "area" ? 17 : 15;
+      b.style.transformOrigin = "50% " + anchor + "px";
+      spotsEl.appendChild(b); spotEls.push({ el: b, yaw: s.yaw, pitch: s.pitch, anchor, k: sizeK(cfg.ui.spotSize, s.size) });
     }
+    placeSpots(); placeSigns();
   }
   function placeSpots() {
     for (const s of spotEls) {
-      const p = project(s.yaw, s.pitch);
-      if (!p || p[0] < -80 || p[0] > W + 80 || p[1] < -80 || p[1] > H + 80) { s.el.hidden = true; continue; }
+      const p = project(s.yaw, s.pitch), m = 80 * Math.max(1, s.k);
+      if (!p || p[0] < -m || p[0] > W + m || p[1] < -m || p[1] > H + m) { s.el.hidden = true; continue; }
       s.el.hidden = false;
-      s.el.style.transform = `translate3d(${(p[0] - s.el.offsetWidth / 2).toFixed(1)}px, ${(p[1] - s.anchor).toFixed(1)}px, 0)`;
+      s.el.style.transform = `translate3d(${(p[0] - s.el.offsetWidth / 2).toFixed(1)}px, ${(p[1] - s.anchor).toFixed(1)}px, 0)` + (s.k === 1 ? "" : ` scale(${s.k.toFixed(3)})`);
+    }
+  }
+
+  // ---------- plaques pinned to the photo ----------
+  // A pinned plaque is a flat rectangle that really hangs in the panorama's 3D space: its centre sits on the ray (yaw, pitch) and its
+  // plane can be turned (wall angle), tilted and rolled. Every frame it is run through the same camera as the picture itself (toView +
+  // the vertical field of view) and handed to the browser as a 3D matrix, so while the picture is dragged it foreshortens exactly like
+  // a sign on the wall would. Layout stays in CSS pixels at a fixed design width (340) and is only scaled, so text never reflows.
+  const SIGN_R = 1000, SIGN_W = 340;
+  const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const mix3 = (a, ka, b, kb) => [a[0] * ka + b[0] * kb, a[1] * ka + b[1] * kb, a[2] * ka + b[2] * kb];
+  // the world-space frame of a pinned plaque: right, down-the-page, and the normal that faces the viewer
+  function signFrame(s) {
+    const yw = s.yaw * D2R, pt = s.pitch * D2R, c = dir(s.yaw, s.pitch);
+    let X = [Math.cos(yw), 0, Math.sin(yw)], Y = [-Math.sin(pt) * Math.sin(yw), Math.cos(pt), Math.sin(pt) * Math.cos(yw)], Z = [-c[0], -c[1], -c[2]];
+    const t = s.turn * D2R, p = s.tilt * D2R, r = s.roll * D2R;
+    // turn about the plaque's vertical axis: positive = right edge moves away
+    let X1 = mix3(X, Math.cos(t), Z, -Math.sin(t)), Z1 = mix3(X, Math.sin(t), Z, Math.cos(t));
+    // tilt about its horizontal axis: positive = top edge moves away
+    const Y2 = mix3(Y, Math.cos(p), Z1, -Math.sin(p)), Z2 = mix3(Y, Math.sin(p), Z1, Math.cos(p));
+    // roll about the normal: positive = clockwise on screen
+    const X3 = mix3(X1, Math.cos(r), Y2, -Math.sin(r)), Y3 = mix3(X1, Math.sin(r), Y2, Math.cos(r));
+    return { c, X: X3, Y: Y3, Z: Z2 };
+  }
+  FFV.signFrame = signFrame;
+  function placeSigns() {
+    if (!signEls.length) return;
+    const P = (H / 2) / Math.tan(vfov() * D2R / 2);
+    signsEl.style.perspective = P.toFixed(2) + "px";
+    for (const s of signEls) {
+      const fr = signFrame(s), cv = toView(fr.c[0] * SIGN_R, fr.c[1] * SIGN_R, fr.c[2] * SIGN_R);
+      if (cv[2] > -SIGN_R * 0.3) { s.el.hidden = true; continue; }   // behind or far off to the side: the browser cannot draw it sensibly
+      s.el.hidden = false;
+      const k = 2 * SIGN_R * Math.tan(s.w * D2R / 2) / SIGN_W;
+      const x = toView(...fr.X), y = toView(...fr.Y), n = toView(...fr.Z);
+      // CSS axes: x right, y down, z towards the viewer — so view-space y flips; the plaque's own y runs down the page
+      const m = [x[0] * k, -x[1] * k, x[2] * k, 0, -y[0] * k, y[1] * k, -y[2] * k, 0, n[0], -n[1], n[2], 0, cv[0], -cv[1], cv[2] + P, 1];
+      s.el.style.transform = `matrix3d(${m.map((v) => +v.toFixed(5)).join(",")}) translate(-50%,-50%)`;
     }
   }
 
@@ -467,12 +524,12 @@
     const y0 = cam.yaw, p0 = cam.pitch, f0 = cam.hfov;
     const ty = link ? link.yaw : y0, tp = link ? clamp(link.pitch, -35, 35) : p0;
     const dy = wrap(ty - y0);
-    spotsEl.classList.add("hide");
+    spotsEl.classList.add("hide"); signsEl.classList.add("hide");
     veil.classList.add("on");
     const move = tween(560, (k) => { const e = easeInOut(k); cam.yaw = y0 + dy * e; cam.pitch = p0 + (tp - p0) * e; cam.hfov = f0 - 14 * e; });
     let img;
     try { [img] = await Promise.all([loadImg(next.pano), move, sleep(reduce ? 200 : 900)]); }
-    catch (e) { veil.classList.remove("on"); spotsEl.classList.remove("hide"); await tween(300, (k) => { cam.hfov = f0 - 14 + 14 * easeOut(k); }); busy = false; return; }
+    catch (e) { veil.classList.remove("on"); spotsEl.classList.remove("hide"); signsEl.classList.remove("hide"); await tween(300, (k) => { cam.hfov = f0 - 14 + 14 * easeOut(k); }); busy = false; return; }
     const old = tex;
     tex = makeTex(img);
     if (old) gl.deleteTexture(old);
@@ -488,7 +545,7 @@
     await sleep(60);
     veil.classList.remove("on");
     await tween(900, (k) => { cam.hfov = zoomIn + (target - zoomIn) * easeOut(k); });
-    spotsEl.classList.remove("hide");
+    spotsEl.classList.remove("hide"); signsEl.classList.remove("hide");
     busy = false; idleSince = performance.now();
     preload();
   }
@@ -566,7 +623,7 @@
     }
     if (rotOn && !EDIT && !busy && !ptrs.size && card.hidden && now - idleSince > 3500 && tex) { cam.yaw += dt * 0.004; dirty = true; }
     if (dirty && cfg) {
-      dirty = false; draw(); placeSpots(); placeCone();
+      dirty = false; draw(); placeSigns(); placeSpots(); placeCone();
       const s = cam.yaw.toFixed(0) + "|" + cam.pitch.toFixed(1);
       if (s !== lastScene) { lastScene = s; updateScene(); if (FFV.onView) FFV.onView(); }
     }
@@ -589,7 +646,10 @@
       }
     }
     delete c.map;
-    c.nodes.forEach((n) => { delete n.map; if (!n.kind) n.kind = n.aerial ? "aerial" : "outdoor"; n.aerial = n.kind === "aerial"; });
+    c.nodes.forEach((n) => {
+      delete n.map; if (!n.kind) n.kind = n.aerial ? "aerial" : "outdoor"; n.aerial = n.kind === "aerial";
+      (n.links || []).forEach((l) => { if (l.icon) l.icon = iconName(l.icon); });
+    });
     return c;
   }
   FFV.normalize = normalize;

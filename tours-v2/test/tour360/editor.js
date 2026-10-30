@@ -254,6 +254,10 @@
 #ed .item.on{outline:1px solid #3d8bff}
 #ed .item span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #ed .item select{width:auto;flex:none;padding:3px 4px;font-size:11.5px}
+#ed .item.wr{flex-wrap:wrap}
+#ed .item .sz{flex:1 0 100%;display:flex;align-items:center;gap:8px;padding:2px 6px 4px 0;font-size:11.5px;font-weight:600;color:#a7adb6}
+#ed .item .sz input{flex:1;min-width:0}
+#ed .item .sz b{min-width:34px;text-align:right;color:#e9ebee}
 #ed .item button{appearance:none;border:0;background:transparent;color:#9aa1ab;width:27px;height:27px;border-radius:6px;cursor:pointer;font:700 13px/1 inherit;flex:none}
 #ed .item button:hover{color:#fff;background:#2c313b}
 #ed .form{display:grid;gap:8px;padding:10px;border-radius:10px;background:#101215;border:1px solid #2a2e35}
@@ -285,7 +289,8 @@
          : `<input type="text" data-p="${path}.${l}" placeholder="${LANG_NAMES[l]}" value="${esc(obj && obj[l])}">`).join("") + `</label>`;
   const ck = (key, label, on) => `<label class="ck"><input type="checkbox" data-ck="${key}" ${on ? "checked" : ""}> ${label}</label>`;
   const KINDS = [["outdoor", "Снаружи"], ["indoor", "Внутри помещения"], ["aerial", "Аэро (дрон)"]];
-  const ICON_LABEL = { auto: "авто", arrow: "стрелка", door: "дверь", up: "лестница ↑", down: "лестница ↓", drone: "дрон" };
+  const ICON_LABEL = { auto: "авто", arrow: "стрелка", door: "дверь", stairs: "ступени", drone: "дрон" };
+  const fx = (v) => (+v).toFixed(1).replace(/\.0$/, ".0") + "×";
   const PLAN_KINDS = [["map", "Карта участка"], ["plan", "План этажа"]];
 
   function render() {
@@ -314,15 +319,25 @@
         h += (cur.links || []).map((l, i) => {
           const t = cfg.nodes.find((n) => n.id === l.to);
           const auto = t ? FFV.linkIcon(Object.assign({}, l, { icon: "auto" }), cur, t) : "arrow";
-          return `<div class="item"><span>→ ${esc(t ? api.T(t.name) || t.id : l.to)}</span><select data-li="${i}" title="Значок">${Object.keys(ICON_LABEL).map((k) => `<option value="${k}" ${(l.icon || "auto") === k ? "selected" : ""}>${k === "auto" ? "авто: " + ICON_LABEL[auto] : ICON_LABEL[k]}</option>`).join("")}</select><button data-a="mvlink" data-i="${i}" title="Перенести">⤧</button><button data-a="dellink" data-i="${i}" title="Удалить">✕</button></div>`;
+          return `<div class="item wr"><span>→ ${esc(t ? api.T(t.name) || t.id : l.to)}</span><select data-li="${i}" title="Значок">${Object.keys(ICON_LABEL).map((k) => `<option value="${k}" ${(l.icon || "auto") === k ? "selected" : ""}>${k === "auto" ? "авто: " + ICON_LABEL[auto] : ICON_LABEL[k]}</option>`).join("")}</select><button data-a="mvlink" data-i="${i}" title="Перенести">⤧</button><button data-a="dellink" data-i="${i}" title="Удалить">✕</button><label class="sz">размер <input type="range" min="0.5" max="2.5" step="0.1" data-lsz="${i}" value="${l.size || 1}"><b id="vL${i}">${fx(l.size || 1)}</b></label></div>`;
         }).join("") || `<small>Пока нет переходов.</small>`;
         if (others.length) h += `<div class="row"><select id="edLinkTo">${others.map((n) => `<option value="${esc(n.id)}">${esc(api.T(n.name) || n.id)}</option>`).join("")}</select><button class="b" data-a="addlink" aria-pressed="${mode === "link"}">+ Переход</button></div>`;
-        h += `<small>Значок «авто»: дрон — к аэроточке; дверь — между улицей и помещением; лестница — между этажами (по порядку планов).</small>`;
+        h += `<small>Значок «авто»: дрон — к аэроточке; дверь — между улицей и помещением; ступени — между этажами. Размер у каждой кнопки свой (общий размер — во вкладке «Дизайн»).</small>`;
         h += `<div class="k">Метки и плашки</div>`;
-        h += (cur.spots || []).map((s, i) => `<div class="item${edSpot === s ? " on" : ""}"><span>${s.kind === "area" ? "▭" : "ⓘ"} ${esc(api.T(s.title) || "без названия")}</span><button data-a="editspot" data-i="${i}" title="Изменить">✎</button><button data-a="mvspot" data-i="${i}" title="Перенести">⤧</button><button data-a="delspot" data-i="${i}" title="Удалить">✕</button></div>`).join("") || `<small>Пока нет меток.</small>`;
+        h += (cur.spots || []).map((s, i) => `<div class="item${edSpot === s ? " on" : ""}"><span>${s.kind === "area" ? (s.pin ? "▰" : "▭") : "ⓘ"} ${esc(api.T(s.title) || "без названия")}</span><button data-a="editspot" data-i="${i}" title="Изменить">✎</button><button data-a="mvspot" data-i="${i}" title="Перенести">⤧</button><button data-a="delspot" data-i="${i}" title="Удалить">✕</button></div>`).join("") || `<small>Пока нет меток.</small>`;
         h += `<div class="row"><button class="b" data-a="addspot" aria-pressed="${mode === "spot"}">+ Метка</button></div>`;
-        if (edSpot) h += `<div class="form"><div class="row"><label class="ck"><input type="radio" name="edKind" value="info" ${edSpot.kind !== "area" ? "checked" : ""}> Инфо «i»</label><label class="ck"><input type="radio" name="edKind" value="area" ${edSpot.kind === "area" ? "checked" : ""}> Плашка</label></div>` +
-          trioInputs("spot.title", edSpot.title, "Заголовок") + trioInputs("spot.text", edSpot.text, "Текст в карточке", true) + `<div class="row"><button class="b" data-a="closespot">Готово</button></div></div>`;
+        if (edSpot) {
+          const pinned = edSpot.kind === "area" && !!edSpot.pin, sg = (k, d) => (edSpot[k] == null ? d : +edSpot[k]);
+          const slider = (k, label, min, max, step, d, unit) => `<label class="l">${label}: <b id="vSg-${k}">${sg(k, d)}${unit}</b><input type="range" min="${min}" max="${max}" step="${step}" data-sg="${k}" data-unit="${unit}" value="${sg(k, d)}"></label>`;
+          h += `<div class="form"><div class="row"><label class="ck"><input type="radio" name="edKind" value="info" ${edSpot.kind !== "area" ? "checked" : ""}> Инфо «i»</label><label class="ck"><input type="radio" name="edKind" value="area" ${edSpot.kind === "area" ? "checked" : ""}> Плашка</label></div>` +
+            trioInputs("spot.title", edSpot.title, "Заголовок") + trioInputs("spot.text", edSpot.text, pinned ? "Текст на стенде (под заголовком)" : "Текст в карточке", true);
+          if (edSpot.kind === "area") h += `<label class="ck"><input type="checkbox" data-pin="1" ${pinned ? "checked" : ""}> Закрепить на фото как стенд (3D-перспектива)</label>`;
+          if (pinned) h += `<div class="k">Положение стенда</div>` +
+            slider("w", "Ширина", 6, 70, 1, 26, "°") + slider("turn", "Поворот (угол стены)", -85, 85, 1, 0, "°") + slider("tilt", "Наклон", -85, 85, 1, 0, "°") + slider("roll", "Крен", -45, 45, 1, 0, "°") +
+            `<small>Нажмите «⤧» у метки и укажите место на стене. Поворот — если стена стоит под углом к камере (+ — правый край дальше); наклон — для потолка, пола и скошенных плоскостей; крен выравнивает по горизонту. Стенд закреплён на фото и меняется вместе с ним; нажать на него нельзя. На телефоне он мельче, как и всё на панораме, поэтому для короткого заголовка берите ширину 25–40°.</small>`;
+          else h += `<label class="l">Размер метки: <b id="vSsz">${fx(edSpot.size || 1)}</b><input type="range" min="0.5" max="2.5" step="0.1" data-ssz="1" value="${edSpot.size || 1}"></label>`;
+          h += `<div class="row"><button class="b" data-a="closespot">Готово</button></div></div>`;
+        }
       }
     } else if (tab === "tour") {
       h += trioInputs("tour.title", cfg.title, "Название тура");
@@ -338,7 +353,7 @@
       h += `<label class="l">Язык по умолчанию<select id="edDefLang">${cfg.ui.langs.map((l) => `<option value="${l}" ${l === cfg.ui.defaultLang ? "selected" : ""}>${LANG_NAMES[l]}</option>`).join("")}</select></label>`;
       h += `<div class="k">Новый тур</div><div class="row"><button class="b" data-a="newtour">Начать новый тур</button></div><small>Удаляет все точки и планы, дизайн сохраняется.</small>`;
     } else if (tab === "plans") {
-      h += `<div class="note">Карта участка (вид сверху) и планы этажей. Порядок — снизу вверх: карта, 1 этаж, 2 этаж… От него зависит значок лестницы ↑/↓. В туре планы показываются вкладками в панели карты.</div>`;
+      h += `<div class="note">Карта участка (вид сверху) и планы этажей. Порядок — снизу вверх: карта, 1 этаж, 2 этаж… В таком порядке планы идут вкладками в панели карты и группами в ленте миниатюр.</div>`;
       h += cfg.plans.map((p, i) => `<div class="item${edPlan === p ? " on" : ""}"><span>${p.kind === "plan" ? "▦" : "◩"} ${esc(api.T(p.name) || p.id)} <small style="display:inline">· точек ${cfg.nodes.filter((n) => n.plan === p.id).length}</small></span><button data-a="planup" data-i="${i}" title="Ниже по порядку">↑</button><button data-a="planedit" data-i="${i}" title="Изменить">✎</button><button data-a="planshow" data-i="${i}" title="Показать">◉</button><button data-a="plandel" data-i="${i}" title="Удалить">✕</button></div>`).join("") || `<small>Планов пока нет.</small>`;
       h += `<div class="row"><button class="b p" data-a="planadd">+ Карта или план</button></div><small>JPG/PNG: снимок участка строго сверху или чертёж этажа, север — вверху.</small>`;
       if (edPlan) {
@@ -369,6 +384,10 @@
       else h += `<label class="l">Название вместо логотипа<input type="text" data-bt="name" value="${esc(b.name)}" placeholder="например, Agentūra"></label>`;
       h += `<label class="l">Ссылка с логотипа<input type="url" data-bt="url" value="${esc(b.url)}" placeholder="https://…"></label>`;
       h += ck("brand.credit", "Подпись «360° · Fly Frame»", b.credit !== false);
+      h += `<div class="k">Размер указателей</div>`;
+      h += `<label class="l">Кнопки переходов: <b id="vZl">${fx(cfg.ui.linkSize || 1)}</b><input type="range" min="0.6" max="2" step="0.05" data-z="linkSize" value="${cfg.ui.linkSize || 1}"></label>`;
+      h += `<label class="l">Метки «i» и плашки: <b id="vZs">${fx(cfg.ui.spotSize || 1)}</b><input type="range" min="0.6" max="2" step="0.05" data-z="spotSize" value="${cfg.ui.spotSize || 1}"></label>`;
+      h += `<small>Общий размер для всего тура. Каждую кнопку и метку можно ещё увеличить или уменьшить отдельно во вкладке «Точка». Стенды, закреплённые на фото, меняют размер только своей шириной.</small>`;
       h += `<div class="k">Элементы</div><div class="grid2">` +
         ck("ui.thumbs", "Миниатюры", cfg.ui.thumbs) + ck("ui.title", "Название тура", cfg.ui.title) +
         ck("ui.zoom", "Кнопки зума", cfg.ui.zoom) + ck("ui.fullscreen", "Полный экран", cfg.ui.fullscreen) +
@@ -518,7 +537,22 @@
     const el = e.target; if (!el.closest || !el.closest("#ed")) return;
     const cur = api.cur;
     if (el.dataset.p) { setPath(el.dataset.p, el.value); save(); api.applyText(); return; }
-    if (el.name === "edKind" && edSpot) { edSpot.kind = el.value; changed(); return; }
+    if (el.name === "edKind" && edSpot) { edSpot.kind = el.value; changed(); render(); return; }
+    if (el.dataset.lsz != null && cur) {
+      const l = cur.links[+el.dataset.lsz], v = +el.value; if (!l) return;
+      if (v === 1) delete l.size; else l.size = v;
+      const o = $("#vL" + el.dataset.lsz); if (o) o.textContent = fx(v);
+      save(); api.buildSpots(); return;
+    }
+    if (el.dataset.ssz != null && edSpot) { const v = +el.value; if (v === 1) delete edSpot.size; else edSpot.size = v; const o = $("#vSsz"); if (o) o.textContent = fx(v); save(); api.buildSpots(); return; }
+    if (el.dataset.z) { const v = +el.value; cfg.ui[el.dataset.z] = v; const o = $(el.dataset.z === "linkSize" ? "#vZl" : "#vZs"); if (o) o.textContent = fx(v); save(); api.buildSpots(); return; }
+    if (el.dataset.sg && edSpot) { const v = +el.value; edSpot[el.dataset.sg] = v; const o = $("#vSg-" + el.dataset.sg); if (o) o.textContent = v + (el.dataset.unit || ""); save(); api.buildSpots(); return; }
+    if (el.dataset.pin && edSpot) {
+      edSpot.pin = el.checked;
+      if (el.checked) { if (edSpot.w == null) edSpot.w = 26; for (const k of ["turn", "tilt", "roll"]) if (edSpot[k] == null) edSpot[k] = 0; delete edSpot.size; status("Стенд закреплён на фото. Подберите ширину и поворот, чтобы он лёг на стену."); }
+      else for (const k of ["pin", "w", "turn", "tilt", "roll"]) delete edSpot[k];
+      changed(); render(); return;
+    }
     if (el.dataset.li != null && cur) { const l = cur.links[+el.dataset.li]; if (l) { if (el.value === "auto") delete l.icon; else l.icon = el.value; changed(); } return; }
     if (el.id === "edKindN" && cur) { cur.kind = el.value; cur.aerial = el.value === "aerial"; changed(); render(); return; }
     if (el.id === "edNodePlan" && cur) { cur.plan = el.value; if (!el.value) cur.pos = null; else if (cur.pos == null) status("Теперь нажмите «Отметить место» и укажите точку на плане"); changed(); api.buildMap(); if (el.value) api.showPlan(el.value); render(); return; }
