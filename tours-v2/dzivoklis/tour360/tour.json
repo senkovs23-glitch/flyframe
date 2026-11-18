@@ -59,8 +59,8 @@
     "lt": "Koridorius"
    },
    "start": {
-    "yaw": 1.4,
-    "pitch": -8,
+    "yaw": 12.1,
+    "pitch": -8.4,
     "fov": 105
    },
    "links": [
@@ -96,8 +96,8 @@
     "lt": "Vaikų kambarys"
    },
    "start": {
-    "yaw": 20.5,
-    "pitch": -21.9,
+    "yaw": 19.3,
+    "pitch": -18.4,
     "fov": 105
    },
    "links": [
@@ -216,8 +216,9 @@
     "lt": "Virtuvė"
    },
    "start": {
-    "yaw": 0,
-    "pitch": -6
+    "yaw": -7.5,
+    "pitch": -3.9,
+    "fov": 115
    },
    "links": [
     {
@@ -311,8 +312,8 @@
     "lt": "Miegamasis"
    },
    "start": {
-    "yaw": 150.9,
-    "pitch": -14,
+    "yaw": 135.1,
+    "pitch": -34.1,
     "fov": 105
    },
    "links": [
@@ -342,16 +343,16 @@
     "lt": "Vonios kambarys"
    },
    "start": {
-    "yaw": 4.6,
-    "pitch": -17.7,
-    "fov": 105
+    "yaw": 26.5,
+    "pitch": -30.6,
+    "fov": 118
    },
    "links": [
     {
-     "to": "koridors",
-     "yaw": -30.11,
-     "pitch": -22.96,
-     "icon": "door"
+     "to": "viesistaba",
+     "yaw": -28.87,
+     "pitch": -23.58,
+     "size": 0.8
     }
    ],
    "pano": "panos/vannasistaba.jpg",
