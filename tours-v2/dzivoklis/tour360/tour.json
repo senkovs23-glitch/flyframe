@@ -11,7 +11,15 @@
  },
  "start": "koridors",
  "theme": {
-  "preset": "flyframe"
+  "panel": "#2e2e2e",
+  "panelOpacity": 0.62,
+  "text": "#ffffff",
+  "accent": "#ffffff",
+  "accent2": "#ffffff",
+  "radius": 4,
+  "font": "system",
+  "loader": "plane",
+  "preset": "custom"
  },
  "brand": {
   "logo": "",
@@ -30,17 +38,16 @@
   "title": true,
   "compass": true,
   "hint": true,
-  "fov": 105,
+  "fov": 115,
   "fovMin": 30,
   "fovMax": 118,
-  "linkSize": 1,
-  "spotSize": 1,
+  "linkSize": 0.8,
+  "spotSize": 0.85,
   "langs": [
    "lv",
-   "ru",
-   "lt"
+   "ru"
   ],
-  "defaultLang": "lv"
+  "defaultLang": "ru"
  },
  "plans": [],
  "nodes": [
@@ -52,20 +59,22 @@
     "lt": "Koridorius"
    },
    "start": {
-    "yaw": 0,
-    "pitch": -4
+    "yaw": 1.4,
+    "pitch": -8,
+    "fov": 105
    },
    "links": [
     {
      "to": "viesistaba",
-     "yaw": 0,
-     "pitch": -3,
-     "icon": "door"
+     "yaw": 0.02,
+     "pitch": -7.07,
+     "icon": "arrow",
+     "size": 0.7
     },
     {
-     "to": "vannasistaba",
-     "yaw": 24,
-     "pitch": -5,
+     "to": "bernistaba",
+     "yaw": 23.3,
+     "pitch": 1.99,
      "icon": "door"
     }
    ],
@@ -76,7 +85,60 @@
    "kind": "indoor",
    "plan": "",
    "pos": null,
-   "spots": []
+   "spots": [],
+   "aerial": false
+  },
+  {
+   "id": "bernistaba",
+   "name": {
+    "lv": "Bērnu istaba",
+    "ru": "Детская",
+    "lt": "Vaikų kambarys"
+   },
+   "start": {
+    "yaw": 20.5,
+    "pitch": -21.9,
+    "fov": 105
+   },
+   "links": [
+    {
+     "to": "viesistaba",
+     "yaw": -31.39,
+     "pitch": -16.68,
+     "icon": "door",
+     "size": 0.8
+    }
+   ],
+   "pano": "panos/bernistaba.jpg",
+   "panoM": "panos/m/bernistaba.jpg",
+   "thumb": "thumbs/bernistaba.jpg",
+   "heading": 0,
+   "kind": "indoor",
+   "plan": "",
+   "pos": null,
+   "spots": [
+    {
+     "kind": "area",
+     "yaw": -134.85,
+     "pitch": 14.75,
+     "title": {
+      "lv": "Pasaules karte",
+      "ru": "Карта мира",
+      "lt": "Pasaules karte"
+     },
+     "text": {
+      "lv": "Pasaules karte ir izgatavotā no kvalitatīva finiera un labi iekļaujās bērnu istabas interjerā",
+      "ru": "Карта мира выполнена из фанеры и качественно вписывается в интерьер детской комнаты",
+      "lt": "Pasaules karte ir izgatavotā no kvalitatīva finiera un labi iekļaujās bērnu istabas interjerā"
+     },
+     "pin": true,
+     "w": 26,
+     "turn": -3,
+     "tilt": 6,
+     "roll": 0
+    }
+   ],
+   "aerial": false
   },
   {
    "id": "viesistaba",
@@ -94,25 +156,29 @@
      "to": "koridors",
      "yaw": -152,
      "pitch": -8,
-     "icon": "door"
+     "icon": "arrow",
+     "size": 0.8
     },
     {
      "to": "virtuve",
-     "yaw": 33,
-     "pitch": -10,
-     "icon": "door"
-    },
-    {
-     "to": "bernistaba",
-     "yaw": -50,
-     "pitch": -4,
-     "icon": "door"
+     "yaw": 33.57,
+     "pitch": -22.61,
+     "icon": "arrow",
+     "size": 0.8
     },
     {
      "to": "gulamistaba",
-     "yaw": -66,
-     "pitch": -10,
-     "icon": "door"
+     "yaw": -63.57,
+     "pitch": -4.29,
+     "icon": "door",
+     "size": 0.8
+    },
+    {
+     "to": "vannasistaba",
+     "yaw": -49.02,
+     "pitch": -14.73,
+     "icon": "door",
+     "size": 0.8
     }
    ],
    "pano": "panos/viesistaba.jpg",
@@ -122,7 +188,25 @@
    "kind": "indoor",
    "plan": "",
    "pos": null,
-   "spots": []
+   "spots": [
+    {
+     "kind": "info",
+     "yaw": 1.37,
+     "pitch": -16.52,
+     "title": {
+      "lv": "Smatr TV LG",
+      "ru": "Смарт телевизор Телевизор LG",
+      "lt": "Smatr TV LG"
+     },
+     "text": {
+      "lv": "Smart TV ar interaktīvo pulti ar balss vadību",
+      "ru": "Смарт телевизор с интерактивным и голосовым пультом управления",
+      "lt": "Smart TV ar interaktīvo pulti ar balss vadību"
+     },
+     "size": 0.8
+    }
+   ],
+   "aerial": false
   },
   {
    "id": "virtuve",
@@ -138,9 +222,10 @@
    "links": [
     {
      "to": "viesistaba",
-     "yaw": -160,
-     "pitch": -8,
-     "icon": "door"
+     "yaw": -159.92,
+     "pitch": -22.7,
+     "icon": "arrow",
+     "size": 0.8
     }
    ],
    "pano": "panos/virtuve.jpg",
@@ -150,35 +235,73 @@
    "kind": "indoor",
    "plan": "",
    "pos": null,
-   "spots": []
-  },
-  {
-   "id": "bernistaba",
-   "name": {
-    "lv": "Bērnu istaba",
-    "ru": "Детская",
-    "lt": "Vaikų kambarys"
-   },
-   "start": {
-    "yaw": 20,
-    "pitch": -6
-   },
-   "links": [
+   "spots": [
     {
-     "to": "viesistaba",
-     "yaw": -60,
-     "pitch": -8,
-     "icon": "door"
+     "kind": "info",
+     "yaw": -104.81,
+     "pitch": -9.46,
+     "title": {
+      "lv": "Ledusskapis",
+      "ru": "Холодильник",
+      "lt": "Ledusskapis"
+     },
+     "text": {
+      "lv": "Liels pilnvērtīgs ledusskapis ar atsevišķu sadētāvu",
+      "ru": "Большой полноценный встроенный холодильник с отдельной морозильной камерой",
+      "lt": "Liels pilnvērtīgs ledusskapis ar atsevišķu sadētāvu"
+     },
+     "size": 0.8
+    },
+    {
+     "kind": "info",
+     "yaw": -83.46,
+     "pitch": -13.88,
+     "title": {
+      "lv": "Kafijas apārāts",
+      "ru": "Кофейный аппарат",
+      "lt": "Kafijas apārāts"
+     },
+     "text": {
+      "lv": "",
+      "ru": "",
+      "lt": ""
+     },
+     "size": 0.8
+    },
+    {
+     "kind": "info",
+     "yaw": -55.6,
+     "pitch": -47.3,
+     "title": {
+      "lv": "Trauku mazgājamā mašīna",
+      "ru": "Посудомоечная машина",
+      "lt": "Trauku mazgājamā mašīna"
+     },
+     "text": {
+      "lv": "",
+      "ru": "",
+      "lt": ""
+     },
+     "size": 0.8
+    },
+    {
+     "kind": "info",
+     "yaw": 65.11,
+     "pitch": 4.24,
+     "title": {
+      "lv": "Tvaikusūcējs",
+      "ru": "Встроенная вытяжка",
+      "lt": "Tvaikusūcējs"
+     },
+     "text": {
+      "lv": "Jauda: 1000 kub.m minūtē",
+      "ru": "Вытяжка мощностью всасывания 1000 куб.м. в минуту",
+      "lt": "Jauda: 1000 kub.m minūtē"
+     },
+     "size": 0.8
     }
    ],
-   "pano": "panos/bernistaba.jpg",
-   "panoM": "panos/m/bernistaba.jpg",
-   "thumb": "thumbs/bernistaba.jpg",
-   "heading": 0,
-   "kind": "indoor",
-   "plan": "",
-   "pos": null,
-   "spots": []
+   "aerial": false
   },
   {
    "id": "gulamistaba",
@@ -188,15 +311,17 @@
     "lt": "Miegamasis"
    },
    "start": {
-    "yaw": 0,
-    "pitch": 0
+    "yaw": 150.9,
+    "pitch": -14,
+    "fov": 105
    },
    "links": [
     {
      "to": "viesistaba",
-     "yaw": 110,
-     "pitch": -8,
-     "icon": "door"
+     "yaw": 109.15,
+     "pitch": -16.23,
+     "icon": "door",
+     "size": 0.8
     }
    ],
    "pano": "panos/gulamistaba.jpg",
@@ -206,7 +331,8 @@
    "kind": "indoor",
    "plan": "",
    "pos": null,
-   "spots": []
+   "spots": [],
+   "aerial": false
   },
   {
    "id": "vannasistaba",
@@ -216,14 +342,15 @@
     "lt": "Vonios kambarys"
    },
    "start": {
-    "yaw": -10,
-    "pitch": -6
+    "yaw": 4.6,
+    "pitch": -17.7,
+    "fov": 105
    },
    "links": [
     {
      "to": "koridors",
-     "yaw": -31,
-     "pitch": -10,
+     "yaw": -30.11,
+     "pitch": -22.96,
      "icon": "door"
     }
    ],
@@ -234,7 +361,8 @@
    "kind": "indoor",
    "plan": "",
    "pos": null,
-   "spots": []
+   "spots": [],
+   "aerial": false
   }
  ],
  "generator": "Fly Frame 360° v2.1"
