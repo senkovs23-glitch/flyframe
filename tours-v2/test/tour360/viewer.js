@@ -104,7 +104,12 @@
   const canvas = $("#gl");
   const gl = canvas.getContext("webgl", { antialias: false, alpha: false, preserveDrawingBuffer: EDIT });
   if (!gl) { showMsg(UI.lv.nogl); return; }
-  const MAXTEX = Math.min(gl.getParameter(gl.MAX_TEXTURE_SIZE), 4096);
+  const GLMAX = gl.getParameter(gl.MAX_TEXTURE_SIZE), MAXTEX = Math.min(GLMAX, 4096);
+  // Phones and tablets get one texture of up to 4096 px (and the lighter panoM file, if the tour has one).
+  // Computers get the panorama in 2048 px tiles, up to 12288 × 6144 — the full resolution of a 12000 px original.
+  const SMALL = matchMedia("(pointer: coarse)").matches || Math.max(screen.width || 0, screen.height || 0) < 1100;
+  const TILE = 2048, HIRES = !SMALL && GLMAX >= TILE;
+  const panoOf = (n) => (n ? (SMALL && n.panoM ? n.panoM : n.pano) : "");
   const aniso = gl.getExtension("EXT_texture_filter_anisotropic") || gl.getExtension("WEBKIT_EXT_texture_filter_anisotropic");
   const VS = "attribute vec3 p; attribute vec2 uv; uniform mat4 m; varying vec2 v; void main(){ v = uv; gl_Position = m * vec4(p, 1.0); }";
   const FS = "precision mediump float; varying vec2 v; uniform sampler2D a; void main(){ gl_FragColor = vec4(texture2D(a, v).rgb, 1.0); }";
@@ -112,38 +117,62 @@
   const prog = gl.createProgram();
   gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog); gl.useProgram(prog);
   const U = { m: gl.getUniformLocation(prog, "m"), a: gl.getUniformLocation(prog, "a") };
-  const SPH = (() => {
-    const LON = 96, LAT = 48, pos = [], uvs = [], idx = [];
-    for (let j = 0; j <= LAT; j++) {
-      const pt = (0.5 - j / LAT) * Math.PI;
-      for (let i = 0; i <= LON; i++) { const yw = (i / LON - 0.5) * 2 * Math.PI; pos.push(Math.cos(pt) * Math.sin(yw), Math.sin(pt), -Math.cos(pt) * Math.cos(yw)); uvs.push(i / LON, j / LAT); }
+  const LP = gl.getAttribLocation(prog, "p"), LU = gl.getAttribLocation(prog, "uv");
+  gl.enableVertexAttribArray(LP); gl.enableVertexAttribArray(LU);
+  // Sphere split into C × R patches; each patch has its own 0..1 texture coordinates (C = R = 1: one texture).
+  const geoms = {};
+  function geom(C, R) {
+    const key = C + "x" + R; if (geoms[key]) return geoms[key];
+    const sx = Math.max(8, Math.round(96 / C)), sy = Math.max(8, Math.round(48 / R)), pos = [], uvs = [], idx = [], parts = [];
+    for (let rj = 0; rj < R; rj++) for (let ci = 0; ci < C; ci++) {
+      const base = pos.length / 3, off = idx.length;
+      for (let j = 0; j <= sy; j++) {
+        const v = (rj + j / sy) / R, pt = (0.5 - v) * Math.PI;
+        for (let i = 0; i <= sx; i++) { const u = (ci + i / sx) / C, yw = (u - 0.5) * 2 * Math.PI; pos.push(Math.cos(pt) * Math.sin(yw), Math.sin(pt), -Math.cos(pt) * Math.cos(yw)); uvs.push(i / sx, j / sy); }
+      }
+      for (let j = 0; j < sy; j++) for (let i = 0; i < sx; i++) { const a = base + j * (sx + 1) + i, b = a + sx + 1; idx.push(a, b, a + 1, a + 1, b, b + 1); }
+      parts.push({ off: off * 2, count: idx.length - off });
     }
-    for (let j = 0; j < LAT; j++) for (let i = 0; i < LON; i++) { const a = j * (LON + 1) + i, b = a + LON + 1; idx.push(a, b, a + 1, a + 1, b, b + 1); }
-    const buf = (data, loc, n) => { const bo = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, bo); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW); const l = gl.getAttribLocation(prog, loc); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, n, gl.FLOAT, false, 0, 0); };
-    buf(pos, "p", 3); buf(uvs, "uv", 2);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(idx), gl.STATIC_DRAW);
-    return { count: idx.length };
-  })();
-  function makeTex(img) {
-    let w = 1; while (w * 2 <= Math.min(img.naturalWidth, MAXTEX)) w *= 2;
-    const h = w / 2;
-    let src = img;
-    if (img.naturalWidth !== w || img.naturalHeight !== h) {
-      const c = document.createElement("canvas"); c.width = w; c.height = h;
-      const x = c.getContext("2d"); x.imageSmoothingQuality = "high"; x.drawImage(img, 0, 0, w, h); src = c;
-    }
+    const mk = (target, data) => { const bo = gl.createBuffer(); gl.bindBuffer(target, bo); gl.bufferData(target, data, gl.STATIC_DRAW); return bo; };
+    return (geoms[key] = { p: mk(gl.ARRAY_BUFFER, new Float32Array(pos)), uv: mk(gl.ARRAY_BUFFER, new Float32Array(uvs)), ix: mk(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(idx)), parts });
+  }
+  function texFrom(src, wrapS) {
     const t = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, t);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, src);
     gl.generateMipmap(gl.TEXTURE_2D);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     if (aniso) gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(8, gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
     return t;
   }
+  function makeTex(img) {
+    const iw = img.naturalWidth, ih = img.naturalHeight;
+    const C = HIRES ? 2 * clamp(Math.round(iw / (2 * TILE)), 1, 3) : 1, R = C / 2;
+    if (C <= 2) {
+      let w = 1; while (w * 2 <= Math.min(iw, MAXTEX)) w *= 2;
+      const h = w / 2;
+      let src = img;
+      if (iw !== w || ih !== h) {
+        const c = document.createElement("canvas"); c.width = w; c.height = h;
+        const x = c.getContext("2d"); x.imageSmoothingQuality = "high"; x.drawImage(img, 0, 0, w, h); src = c;
+      }
+      return { C: 1, R: 1, t: [texFrom(src, gl.REPEAT)] };
+    }
+    const c = document.createElement("canvas"); c.width = TILE; c.height = TILE;
+    const x = c.getContext("2d"); x.imageSmoothingQuality = "high";
+    const t = [], tw = iw / C, th = ih / R;
+    for (let rj = 0; rj < R; rj++) for (let ci = 0; ci < C; ci++) {
+      x.drawImage(img, ci * tw, rj * th, tw, th, 0, 0, TILE, TILE);
+      t.push(texFrom(c, gl.CLAMP_TO_EDGE));
+    }
+    c.width = c.height = 1;
+    return { C, R, t };
+  }
+  function freeTex(o) { if (o) o.t.forEach((t) => gl.deleteTexture(t)); }
+  function setTex(img) { freeTex(tex); tex = null; tex = makeTex(img); }
 
   // ---------- camera ----------
   const cam = { yaw: 0, pitch: 0, hfov: 95, vy: 0, vp: 0 };
@@ -186,9 +215,12 @@
     for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) { let s = 0; for (let k = 0; k < 4; k++) s += P[k * 4 + r] * M[c * 4 + k]; out[c * 4 + r] = s; }
     return out;
   }
-  const imgCache = {};
+  const imgCache = {}, imgOrder = [];
   function loadImg(path) {
     const src = resolve(path);
+    const k = imgOrder.indexOf(src); if (k >= 0) imgOrder.splice(k, 1);
+    imgOrder.push(src);
+    while (imgOrder.length > (SMALL ? 3 : 4)) delete imgCache[imgOrder.shift()];
     if (!imgCache[src]) {
       imgCache[src] = new Promise((res, rej) => {
         const i = new Image();
@@ -204,8 +236,12 @@
     gl.clearColor(p[0] / 255, p[1] / 255, p[2] / 255, 1); gl.clear(gl.COLOR_BUFFER_BIT);
     if (!tex) return;
     gl.uniformMatrix4fv(U.m, false, matrix());
-    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex); gl.uniform1i(U.a, 0);
-    gl.drawElements(gl.TRIANGLES, SPH.count, gl.UNSIGNED_SHORT, 0);
+    const g = geom(tex.C, tex.R);
+    gl.bindBuffer(gl.ARRAY_BUFFER, g.p); gl.vertexAttribPointer(LP, 3, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, g.uv); gl.vertexAttribPointer(LU, 2, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, g.ix);
+    gl.activeTexture(gl.TEXTURE0); gl.uniform1i(U.a, 0);
+    g.parts.forEach((pt, i) => { gl.bindTexture(gl.TEXTURE_2D, tex.t[i]); gl.drawElements(gl.TRIANGLES, pt.count, gl.UNSIGNED_SHORT, pt.off); });
   }
 
   // ---------- plans ----------
@@ -437,7 +473,7 @@
       }
       const b = document.createElement("button");
       b.className = "th"; b.dataset.id = n.id;
-      const im = n.thumb || n.pano;
+      const im = n.thumb || panoOf(n);
       b.style.backgroundImage = im ? `url("${resolve(im).replace(/"/g, "%22")}")` : "";
       b.innerHTML = `<span>${esc(T(n.name))}</span>`;
       b.title = T(n.name);
@@ -528,11 +564,9 @@
     veil.classList.add("on");
     const move = tween(560, (k) => { const e = easeInOut(k); cam.yaw = y0 + dy * e; cam.pitch = p0 + (tp - p0) * e; cam.hfov = f0 - 14 * e; });
     let img;
-    try { [img] = await Promise.all([loadImg(next.pano), move, sleep(reduce ? 200 : 900)]); }
+    try { [img] = await Promise.all([loadImg(panoOf(next)), move, sleep(reduce ? 200 : 900)]); }
     catch (e) { veil.classList.remove("on"); spotsEl.classList.remove("hide"); signsEl.classList.remove("hide"); await tween(300, (k) => { cam.hfov = f0 - 14 + 14 * easeOut(k); }); busy = false; return; }
-    const old = tex;
-    tex = makeTex(img);
-    if (old) gl.deleteTexture(old);
+    setTex(img);
     cur = next;
     const s = next.start || { yaw: 0, pitch: 0 }, target = baseFov(next);
     cam.yaw = link ? wrap(ty - hA + hB) : s.yaw;
@@ -549,11 +583,11 @@
     busy = false; idleSince = performance.now();
     preload();
   }
-  function preload() { for (const l of (cur && cur.links) || []) if (byId[l.to]) loadImg(byId[l.to].pano).catch(() => {}); }
+  function preload() { for (const l of (cur && cur.links) || []) if (byId[l.to]) loadImg(panoOf(byId[l.to])).catch(() => {}); }
   async function reloadPano(node) {
-    Object.keys(imgCache).forEach((k) => delete imgCache[k]);
+    Object.keys(imgCache).forEach((k) => delete imgCache[k]); imgOrder.length = 0;
     if (node && cur && node.id === cur.id) {
-      try { const img = await loadImg(node.pano); const old = tex; tex = makeTex(img); if (old) gl.deleteTexture(old); dirty = true; } catch (e) {}
+      try { const img = await loadImg(panoOf(node)); setTex(img); dirty = true; } catch (e) {}
     }
   }
 
@@ -664,9 +698,9 @@
     dirty = true;
   }
   async function showNode(n, keepCam) {
-    if (!n) { cur = null; if (tex) { gl.deleteTexture(tex); tex = null; } buildSpots(); updateScene(); dirty = true; return; }
-    const img = await loadImg(n.pano);
-    const old = tex; tex = makeTex(img); if (old) gl.deleteTexture(old);
+    if (!n) { cur = null; if (tex) { freeTex(tex); tex = null; } buildSpots(); updateScene(); dirty = true; return; }
+    const img = await loadImg(panoOf(n));
+    setTex(img);
     cur = n;
     if (!keepCam) { const s = n.start || { yaw: 0, pitch: 0 }; cam.yaw = s.yaw; cam.pitch = s.pitch; cam.hfov = baseFov(n); }
     if (n.plan && planById(n.plan)) { shownPlan = n.plan; buildMap(); }
@@ -705,7 +739,7 @@
     setMapOpen(store.get("ff2-map") === "1" || (store.get("ff2-map") == null && !phone()));
     const start = byId[location.hash.slice(1)] || byId[cfg.start] || cfg.nodes[0];
     if (!start) { $("#loader").classList.add("done"); if (!EDIT) showMsg(S().empty); if (FFV.editorMount) FFV.editorMount(); return; }
-    try { await loadImg(start.pano); } catch (e) { showMsg(S().fail); return; }
+    try { await loadImg(panoOf(start)); } catch (e) { showMsg(S().fail); return; }
     await sleep(Math.max(0, (themeOf(cfg).loader === "plane" ? 1200 : 500) - (performance.now() - t0)));
     await showNode(start);
     const target = cam.hfov, z0 = Math.max(fovMin(), target - 12); cam.hfov = z0;

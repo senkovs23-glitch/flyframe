@@ -1,0 +1,241 @@
+{
+ "title": {
+  "lv": "Trīsistabu dzīvoklis",
+  "ru": "Трёхкомнатная квартира",
+  "lt": "Trijų kambarių butas"
+ },
+ "badge": {
+  "lv": "",
+  "ru": "",
+  "lt": ""
+ },
+ "start": "koridors",
+ "theme": {
+  "preset": "flyframe"
+ },
+ "brand": {
+  "logo": "",
+  "logoHeight": 34,
+  "name": "",
+  "url": "",
+  "credit": true,
+  "logoTone": "auto"
+ },
+ "ui": {
+  "thumbs": true,
+  "map": false,
+  "autorotate": true,
+  "zoom": true,
+  "fullscreen": true,
+  "title": true,
+  "compass": true,
+  "hint": true,
+  "fov": 105,
+  "fovMin": 30,
+  "fovMax": 118,
+  "linkSize": 1,
+  "spotSize": 1,
+  "langs": [
+   "lv",
+   "ru",
+   "lt"
+  ],
+  "defaultLang": "lv"
+ },
+ "plans": [],
+ "nodes": [
+  {
+   "id": "koridors",
+   "name": {
+    "lv": "Gaitenis",
+    "ru": "Коридор",
+    "lt": "Koridorius"
+   },
+   "start": {
+    "yaw": 0,
+    "pitch": -4
+   },
+   "links": [
+    {
+     "to": "viesistaba",
+     "yaw": 0,
+     "pitch": -3,
+     "icon": "door"
+    },
+    {
+     "to": "vannasistaba",
+     "yaw": 24,
+     "pitch": -5,
+     "icon": "door"
+    }
+   ],
+   "pano": "panos/koridors.jpg",
+   "panoM": "panos/m/koridors.jpg",
+   "thumb": "thumbs/koridors.jpg",
+   "heading": 0,
+   "kind": "indoor",
+   "plan": "",
+   "pos": null,
+   "spots": []
+  },
+  {
+   "id": "viesistaba",
+   "name": {
+    "lv": "Viesistaba",
+    "ru": "Гостиная",
+    "lt": "Svetainė"
+   },
+   "start": {
+    "yaw": 0,
+    "pitch": -4
+   },
+   "links": [
+    {
+     "to": "koridors",
+     "yaw": -152,
+     "pitch": -8,
+     "icon": "door"
+    },
+    {
+     "to": "virtuve",
+     "yaw": 33,
+     "pitch": -10,
+     "icon": "door"
+    },
+    {
+     "to": "bernistaba",
+     "yaw": -50,
+     "pitch": -4,
+     "icon": "door"
+    },
+    {
+     "to": "gulamistaba",
+     "yaw": -66,
+     "pitch": -10,
+     "icon": "door"
+    }
+   ],
+   "pano": "panos/viesistaba.jpg",
+   "panoM": "panos/m/viesistaba.jpg",
+   "thumb": "thumbs/viesistaba.jpg",
+   "heading": 0,
+   "kind": "indoor",
+   "plan": "",
+   "pos": null,
+   "spots": []
+  },
+  {
+   "id": "virtuve",
+   "name": {
+    "lv": "Virtuve",
+    "ru": "Кухня",
+    "lt": "Virtuvė"
+   },
+   "start": {
+    "yaw": 0,
+    "pitch": -6
+   },
+   "links": [
+    {
+     "to": "viesistaba",
+     "yaw": -160,
+     "pitch": -8,
+     "icon": "door"
+    }
+   ],
+   "pano": "panos/virtuve.jpg",
+   "panoM": "panos/m/virtuve.jpg",
+   "thumb": "thumbs/virtuve.jpg",
+   "heading": 0,
+   "kind": "indoor",
+   "plan": "",
+   "pos": null,
+   "spots": []
+  },
+  {
+   "id": "bernistaba",
+   "name": {
+    "lv": "Bērnu istaba",
+    "ru": "Детская",
+    "lt": "Vaikų kambarys"
+   },
+   "start": {
+    "yaw": 20,
+    "pitch": -6
+   },
+   "links": [
+    {
+     "to": "viesistaba",
+     "yaw": -60,
+     "pitch": -8,
+     "icon": "door"
+    }
+   ],
+   "pano": "panos/bernistaba.jpg",
+   "panoM": "panos/m/bernistaba.jpg",
+   "thumb": "thumbs/bernistaba.jpg",
+   "heading": 0,
+   "kind": "indoor",
+   "plan": "",
+   "pos": null,
+   "spots": []
+  },
+  {
+   "id": "gulamistaba",
+   "name": {
+    "lv": "Guļamistaba",
+    "ru": "Спальня",
+    "lt": "Miegamasis"
+   },
+   "start": {
+    "yaw": 0,
+    "pitch": 0
+   },
+   "links": [
+    {
+     "to": "viesistaba",
+     "yaw": 110,
+     "pitch": -8,
+     "icon": "door"
+    }
+   ],
+   "pano": "panos/gulamistaba.jpg",
+   "panoM": "panos/m/gulamistaba.jpg",
+   "thumb": "thumbs/gulamistaba.jpg",
+   "heading": 0,
+   "kind": "indoor",
+   "plan": "",
+   "pos": null,
+   "spots": []
+  },
+  {
+   "id": "vannasistaba",
+   "name": {
+    "lv": "Vannas istaba",
+    "ru": "Санузел",
+    "lt": "Vonios kambarys"
+   },
+   "start": {
+    "yaw": -10,
+    "pitch": -6
+   },
+   "links": [
+    {
+     "to": "koridors",
+     "yaw": -31,
+     "pitch": -10,
+     "icon": "door"
+    }
+   ],
+   "pano": "panos/vannasistaba.jpg",
+   "panoM": "panos/m/vannasistaba.jpg",
+   "thumb": "thumbs/vannasistaba.jpg",
+   "heading": 0,
+   "kind": "indoor",
+   "plan": "",
+   "pos": null,
+   "spots": []
+  }
+ ],
+ "generator": "Fly Frame 360° v2.1"
+}

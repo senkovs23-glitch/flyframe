@@ -183,6 +183,7 @@
       const n = cfg.nodes[i], o = out.nodes[i];
       status(`Собираю архив… точка ${i + 1} из ${cfg.nodes.length}`);
       try { const name = `panos/${n.id}.${extOf(n.pano, blobOf(n.pano))}`; add(D + name, await bytesOf(n.pano)); o.pano = name; } catch (e) { problems.push(n.pano); }
+      if (n.panoM) { try { const name = `panos/m/${n.id}.${extOf(n.panoM, blobOf(n.panoM))}`; add(D + name, await bytesOf(n.panoM)); o.panoM = name; } catch (e) { delete o.panoM; } }
       try { const t = await makeThumb(n); add(D + `thumbs/${n.id}.jpg`, new Uint8Array(await t.arrayBuffer())); o.thumb = `thumbs/${n.id}.jpg`; } catch (e) { o.thumb = ""; }
     }
     for (let i = 0; i < cfg.plans.length; i++) {
@@ -457,7 +458,7 @@
     if (a === "photo" && cur) {
       const [f] = await pickFiles("image/jpeg,image/png,image/webp"); if (!f) return;
       const path = `panos/${cur.id}.${extOf(f.name, f)}`; if (cur.pano !== path && files.has(cur.pano)) dropFile(cur.pano);
-      putFile(path, f); cur.pano = path; cur.thumb = ""; changed(); await api.reloadPano(cur); api.buildStrip(); render(); status("Фото заменено");
+      putFile(path, f); cur.pano = path; cur.thumb = ""; delete cur.panoM; changed(); await api.reloadPano(cur); api.buildStrip(); render(); status("Фото заменено");
     }
     if (a === "addlink") setMode("link", $("#edLinkTo").value);
     if (a === "dellink") { cur.links.splice(i, 1); changed(); render(); }
